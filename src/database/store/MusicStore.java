@@ -24,6 +24,8 @@ public class MusicStore {
 					String albumTitle = components[0].strip();
 					String artist = components[1].strip();
 					String albumFile = albumTitle + "_" + artist + ".txt"; // Assemble the name of the file containing file info
+					
+					parseAlbumInfo(albumTitle);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -34,6 +36,28 @@ public class MusicStore {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void parseAlbumInfo(String albumTitle) {
+		// TODO Auto-generated method stub
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(albumTitle));
+			try {
+				String lineOne = br.readLine();
+				String[] info = lineOne.split(",");
+				// recall "The first line of the file is the heading, which is in the following format":
+				//         Album Title,Artist,Genre,Year
+				Album album = new Album(info[0], info[1], info[2], Integer.parseInt(info[3]));
+				store.put(info[0], album);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
