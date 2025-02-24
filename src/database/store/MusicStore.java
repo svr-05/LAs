@@ -48,7 +48,13 @@ public class MusicStore {
 				// recall "The first line of the file is the heading, which is in the following format":
 				//                 Album Title    Artist    Genre                     Year
 				Album album = new Album(info[0], info[1], info[2], Integer.parseInt(info[3]));
-				store.put(info[0], album);
+				
+				String tracklistSong = "";
+				while ((tracklistSong = br.readLine()) != null) {
+					Song song = new Song(tracklistSong, info[1], info[0]); // Disorganized, possible bugs
+					album.addSong(song); // add all the songs in the tracklist to the array of songs
+				}
+				store.put(info[0], album); // { "Album title": Album }
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

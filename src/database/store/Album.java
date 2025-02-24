@@ -35,8 +35,8 @@ public class Album {
 	}
 	
 	// setters
-	public void addSong(String title, String author, String album) {
-		this.songs.add(new Song(title, author, album));
+	public void addSong(Song song) {
+		this.songs.add(new Song(song));
 	}
 	
 	@Override

@@ -17,6 +17,11 @@ public class Song {
 		this.isFavorite = false;
 	}
 	
+	// copy constructor
+	public Song(Song song) {
+		this(song.title, song.author, song.album);
+	}
+	
 	// getters
 	public String getTitle() { return this.title; }
 	
