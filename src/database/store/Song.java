@@ -5,7 +5,7 @@ public class Song {
 	private String title,
 	               author;
 	private String album;
-	private String rating;
+	private int rating;
 	private boolean isFavorite;
 	
 	// constructor
@@ -13,7 +13,7 @@ public class Song {
 		this.title = title;
 		this.author = author;
 		this.album = album;
-		this.rating = null;
+		this.rating = -1; // We need to talk about what the type of rating should be either string or int
 		this.isFavorite = false;
 	}
 	
@@ -29,16 +29,20 @@ public class Song {
 	
 	public String getAlbum() { return this.album; }
 	
-	public String getRating() { return this.rating; }
+	public int getRating() {
+		// -1 represents no rating with r
+		if (this.rating != -1) return this.rating; 
+		else return -1;
+	}
 	
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
 	// setters
 	public void setFavorite() { this.isFavorite = true; }
 	
-	public void rate(String r) {
+	public void rate(int r) {
 		this.rating = r;
-		if (r == "5") this.isFavorite = true;
+		if (r == 5) this.isFavorite = true;
 	}
 	
 	@Override
