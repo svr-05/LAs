@@ -9,6 +9,8 @@ import java.util.HashMap;
 public class MusicStore {
 	
 	private HashMap<String, Album> store;
+	// Lets add in a ArrayList or Hashmap for the playlist
+	// I also Think we should make another class called MusicLibrary.java This would help with storing the songs and printing them
 	
 	public MusicStore() {
 		this.store = new HashMap<String, Album>();
