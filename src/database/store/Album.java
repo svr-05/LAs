@@ -45,7 +45,7 @@ public class Album {
 		sb.append("Album name: " + this.name);
 		sb.append(" Author: " + this.artist);
 		sb.append(" Genre: " + this.genre);
-		sb.append(" Rlease year: " + this.year);
+		sb.append(" Release year: " + this.year);
 		String songs = "";
 		for (Song s : this.songs) {
 			songs += s.getTitle();
