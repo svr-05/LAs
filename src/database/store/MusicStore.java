@@ -68,4 +68,13 @@ public class MusicStore {
 		
 	}
 
+	public boolean checkStore(String aTitle){ // Searches for a title in the HashMap/Music Store
+		for(String key: store.keySet()) {
+			if(aTitle.equals(key)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }
