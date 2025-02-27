@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.ArrayList;
 
 public class MusicStore {
 	
 	private HashMap<String, Album> store;
+	private ArrayList<SongData> storesongs;
 	
 	public MusicStore() {
 		this.store = new HashMap<String, Album>();
@@ -24,7 +26,8 @@ public class MusicStore {
 					String albumTitle = components[0].strip();
 					String artist = components[1].strip();
 					String albumFile = albumTitle + "_" + artist + ".txt"; // Assemble the name of the file containing file info
-					parseAlbumInfo(albumFile);
+					
+					parseAlbumInfo(albumTitle);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -50,7 +53,9 @@ public class MusicStore {
 				
 				String tracklistSong = "";
 				while ((tracklistSong = br.readLine()) != null) {
-					Song song = new Song(tracklistSong, info[1], info[0]); // Disorganized, possible bugs
+					SongData songData = new SongData(tracklistSong, info[1], info[0]); // Disorganized, possible bugs
+					Song song = new Song(tracklistSong, info[1], info[0]);
+					storesongs.add(songData);
 					album.addSong(song); // add all the songs in the tracklist to the array of songs
 				}
 				store.put(info[0], album); // { "Album title": Album }
@@ -62,13 +67,13 @@ public class MusicStore {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
+
 	
 	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the HashMap/Music Store
-		for(Album a: store.values()) {
-			for(Song s: a.getSongList()) {
-				if(s.getTitle().equals(sTitle)) return true;
-			}
+		for(SongData s: storesongs) {
+			if(s.getTitle().equals(sTitle)) return true;
 		}
 		return false;
 	}
@@ -80,5 +85,4 @@ public class MusicStore {
 		return false;
 	}
 	
-
 }
