@@ -6,13 +6,11 @@ public class PlayList {
 	
 	private String title;
 	private ArrayList<Song> body;
-	private String type;
 	
 	//Constructors
 	public PlayList(String title) {
 		this.title = title;
 		this.body = new ArrayList<Song>();
-		this.type = "PLAYLIST";
 	}
 	
 	public PlayList(PlayList p) {
@@ -29,11 +27,6 @@ public class PlayList {
 		return new ArrayList<>(body);
 	}
 	
-	public String getType() {
-		return this.type;
-	}
-	
-	
 	//Methods
 	public void addSong(Song s) {
 		body.add(new Song(s));
@@ -45,7 +38,7 @@ public class PlayList {
 	
 	//StringMethod
 	public String toString(){
-		String result = "";
+		String result = title + " : ";
 		for(Song song : body) {
 			result = "\n-" + song.toString();
 		}
