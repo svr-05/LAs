@@ -9,7 +9,6 @@ public class Album {
 		genre;
 	private int year;
 	private ArrayList<Song> songs;
-	
 
 	// constructor
 	public Album(String name, String artist, String genre, int year) {
@@ -33,15 +32,9 @@ public class Album {
 		return new ArrayList<Song>(songs);
 	}
 	
-	public void getSongs() {
-		for (Song s : this.songs) {
-			System.out.println(s);
-		}
-	}
-	
 	// setters
-	public void addSong(Song song) {
-		this.songs.add(new Song(song));
+	public void addSong(Song s) {
+		this.songs.add(new Song(s));
 	}
 	
 	@Override
