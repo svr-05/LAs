@@ -29,12 +29,8 @@ public class Album {
 	
 	public int getYear() { return year; }
 	
-	public String getSongs() {
-		StringBuilder sb = new StringBuilder();
-		for (Song s : this.songs) {
-			sb.append(s.toString());
-		} sb.append("\n");
-		return sb.toString();
+	public ArrayList<Song> getSongs() {
+		return new ArrayList<Song>(this.songs);
 	}
 	
 	// setters
@@ -42,21 +38,24 @@ public class Album {
 		this.songs.add(new Song(song));
 	}
 	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Album name: " + this.name);
-		sb.append(" Author: " + this.artist);
-		sb.append(" Genre: " + this.genre);
-		sb.append(" Rlease year: " + this.year);
+		sb.append(", Author: " + this.artist);
+		sb.append(", Genre: " + this.genre);
+		sb.append(", Release year: " + this.year);
+		sb.append("\nTracklist:\n");
 		String songs = "";
 		for (Song s : this.songs) {
 			songs += s.getTitle();
-			songs += " ";
+			songs += "\n";
 		}
 		sb.append(songs.trim());
 		return sb.toString();
 	}
+	
 	
 
 }
