@@ -1,4 +1,4 @@
-package database.store;
+package LA1;
 
 import java.util.ArrayList;
 
@@ -6,8 +6,7 @@ public class Album {
 	// instance variables
 	private String name, 
 		artist,
-		genre,
-		type;
+		genre;
 	private int year;
 	private ArrayList<Song> songs;
 	
@@ -18,7 +17,6 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
-		this.type = "ALBUM";
 		this.songs = new ArrayList<Song>();
 	}
 	
@@ -29,9 +27,11 @@ public class Album {
 	
 	public String getGenre() { return genre; }
 	
-	public String getType() { return type; }
-	
 	public int getYear() { return year; }
+	
+	public ArrayList<Song> getSongList() {
+		return new ArrayList<Song>(songs);
+	}
 	
 	public void getSongs() {
 		for (Song s : this.songs) {
