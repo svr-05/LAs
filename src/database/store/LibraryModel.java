@@ -3,14 +3,14 @@ package LA1;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class MusicLibrary extends MusicStore{
+public class LibraryModel extends MusicStore{
 
 	private ArrayList<PlayList> userList;
-	private ArrayList<Object> library; // Holds in a Song, Album, or Playlist
-	private HashMap<Song, Boolean> favorites; // Holds the songs that are favorited
+	private ArrayList<Object> library; // Holds in a Song or Album
+	private HashMap<SongData, Boolean> favorites; // Holds the songs that are favorited
 	
 	//Constructors
-	public MusicLibrary() {
+	public LibraryModel() {
 		this.userList = new ArrayList<>();
 		this.library = new ArrayList<>();
 		this.favorites = new HashMap<>();
@@ -24,15 +24,14 @@ public class MusicLibrary extends MusicStore{
 		return new ArrayList<>(library);
 	}
 	
-	//Gen Methods
-	//Add Song/Album
-	public void addSong(Song S) { 
-		if(checkStoreSong(S.getTitle())) { library.add(new Song(S));}
+	//Add Song/Album/PlayList to Library
+	public void addSong(SongData S) {
+		if(checkStoreSong(S.getTitle())) { library.add(new SongData(S));}
 	}
 	public void addAlbum(Album A) { 
 		if(checkStoreAlbum(A.getName())) { library.add(A); }
 	}
-	public void addFavorite(Song S) {	// Assumes Song is not already favorite
+	public void addFavorite(SongData S) {	// Assumes Song is not already favorite
 		if(S.favoriteStatus()) {
 			favorites.put(S, S.favoriteStatus());
 		} else {
@@ -40,13 +39,11 @@ public class MusicLibrary extends MusicStore{
 			favorites.put(S, S.favoriteStatus());
 		}
 	}
-
-	//Create PlayList
-	public void makePlayList(String name){ library.add(new PlayList(name));}
+	public void makePlayList(String name){ userList.add(new PlayList(name));}
 	
 	//Rate a Song
 	public void rateSong(String stitle, int r) {
-		for(Song s: getSongs()) {
+		for(SongData s: getSongs()) {
 			if(s.getTitle().equals(stitle)) {
 				if(r == 5) {
 					s.rate(r);
@@ -56,14 +53,32 @@ public class MusicLibrary extends MusicStore{
 		}
 	}
 	
+	//Modify PlayList
+	//Add Song
+	public void addSongToPlayList(String PName, Song S) {
+		for(PlayList p: userList) {
+			if(p.getTitle().equals(PName)) {
+				p.addSong(S);
+			}
+		}
+	}
 	
-	//Methods that can retrieve
+	//Remove Song
+	public void removeSongFromPlayList(String PName, Song S) {
+		for(PlayList p: userList) {
+			if(p.getTitle().equals(PName)) {
+				p.remove(S);
+			}
+		}
+	}
+	
+	// Helper Methods that can retrieve
 	// Retrieves the list of Songs from Library
-	public ArrayList<Song> getSongs(){
-		ArrayList<Song> result = new ArrayList<>();
+	private ArrayList<SongData> getSongs(){
+		ArrayList<SongData> result = new ArrayList<>();
 		for(Object elem: library) {
-			if(elem instanceof Song) {
-				Song s = (Song) elem;
+			if(elem instanceof SongData) {
+				SongData s = (SongData) elem;
 				result.add(s);
 			}
 		}
@@ -71,7 +86,7 @@ public class MusicLibrary extends MusicStore{
 	}
 	
 	// Retrieves the list of Albums from library
-	public ArrayList<Album> getAlbums(){
+	private ArrayList<Album> getAlbums(){
 		ArrayList<Album> result = new ArrayList<>();
 		for(Object elem: library) {
 			if(elem instanceof Album) {
@@ -81,19 +96,6 @@ public class MusicLibrary extends MusicStore{
 		}
 		return result;
 	}
-	
-	// Retrieves the List of PlayList created
-	public ArrayList<PlayList> getPlayLists(){
-		ArrayList<PlayList> result = new ArrayList<>();
-		for(Object elem: library) {
-			if(elem instanceof PlayList) {
-				PlayList p = (PlayList) elem;
-				result.add(p);
-			}
-		}
-		return result;
-	}
-	
 	
 	
 	
