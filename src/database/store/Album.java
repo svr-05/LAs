@@ -5,9 +5,8 @@ import java.util.ArrayList;
 public class Album {
 	// instance variables
 	private String name, 
-		artist,
-		genre,
-		type;
+		           artist,
+		           genre;
 	private int year;
 	private ArrayList<Song> songs;
 	
@@ -18,7 +17,6 @@ public class Album {
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
-		this.type = "ALBUM";
 		this.songs = new ArrayList<Song>();
 	}
 	
@@ -28,8 +26,6 @@ public class Album {
 	public String getArtist() { return artist; }
 	
 	public String getGenre() { return genre; }
-	
-	public String getType() { return type; }
 	
 	public int getYear() { return year; }
 	

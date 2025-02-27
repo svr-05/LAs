@@ -1,11 +1,17 @@
 package database.store;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
 public class Song {
 	// instance variables
+	public final ArrayList<String> RATINGS;
+	
 	private String title,
-	               author;
-	private String album;
-	private int rating;
+	               author,
+	               album,
+	               rating;
 	private boolean isFavorite;
 	
 	// constructor
@@ -13,7 +19,10 @@ public class Song {
 		this.title = title;
 		this.author = author;
 		this.album = album;
-		this.rating = -1; // We need to talk about what the type of rating should be either string or int
+		RATINGS = new ArrayList<String>(Arrays.asList
+				(null, "★", "★ ★", "★ ★ ★", "★ ★ ★ ★", "★ ★ ★ ★ ★"));
+		Collections.unmodifiableList(RATINGS); // makes RATING immutable, throws UnsupportedOperationException
+		this.rating = RATINGS.get(0);
 		this.isFavorite = false;
 	}
 	
@@ -29,10 +38,8 @@ public class Song {
 	
 	public String getAlbum() { return this.album; }
 	
-	public int getRating() {
-		// -1 represents no rating with r
-		if (this.rating != -1) return this.rating; 
-		else return -1;
+	public String getRating() {
+		return this.rating;
 	}
 	
 	public boolean favoriteStatus() { return this.isFavorite; }
@@ -41,8 +48,7 @@ public class Song {
 	public void setFavorite() { this.isFavorite = true; }
 	
 	public void rate(int r) {
-		this.rating = r;
-		if (r == 5) this.isFavorite = true;
+		this.rating = RATINGS.get(r);
 	}
 	
 	@Override
