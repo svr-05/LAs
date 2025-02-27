@@ -4,18 +4,21 @@ import java.util.ArrayList;
 
 public class Album {
 	// instance variables
-	private String name,
-				   artist,
-	               genre;
+	private String name, 
+		artist,
+		genre,
+		type;
 	private int year;
 	private ArrayList<Song> songs;
 	
+
 	// constructor
 	public Album(String name, String artist, String genre, int year) {
 		this.name = name;
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
+		this.type = "ALBUM";
 		this.songs = new ArrayList<Song>();
 	}
 	
@@ -25,6 +28,8 @@ public class Album {
 	public String getArtist() { return artist; }
 	
 	public String getGenre() { return genre; }
+	
+	public String getType() { return type; }
 	
 	public int getYear() { return year; }
 	
@@ -36,7 +41,7 @@ public class Album {
 	
 	// setters
 	public void addSong(Song song) {
-		this.songs.add(new Song(song)); // This might cause a problem later on
+		this.songs.add(new Song(song));
 	}
 	
 	@Override
@@ -45,7 +50,7 @@ public class Album {
 		sb.append("Album name: " + this.name);
 		sb.append(" Author: " + this.artist);
 		sb.append(" Genre: " + this.genre);
-		sb.append(" Release year: " + this.year);
+		sb.append(" Rlease year: " + this.year);
 		String songs = "";
 		for (Song s : this.songs) {
 			songs += s.getTitle();
