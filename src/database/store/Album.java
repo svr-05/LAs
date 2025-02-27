@@ -38,16 +38,16 @@ public class Album {
 	
 	// setters
 	public void addSong(Song song) {
-		this.songs.add(new Song(song)); // Use the copy constructor!
+		this.songs.add(new Song(song)); // This might cause a problem later on
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Album name: " + this.name);
-		sb.append(", Author: " + this.artist);
-		sb.append(", Genre: " + this.genre);
-		sb.append(", Rlease year: " + this.year);
+		sb.append(" Author: " + this.artist);
+		sb.append(" Genre: " + this.genre);
+		sb.append(" Release year: " + this.year);
 		String songs = "";
 		for (Song s : this.songs) {
 			songs += s.getTitle();
