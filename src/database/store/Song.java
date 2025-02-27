@@ -3,9 +3,9 @@ package database.store;
 public class Song {
 	// instance variables
 	private String title,
-	               author;
-	private String album;
-	private String rating;
+	               author,
+	               album,
+	               rating; // rating is a String to take advantage of null
 	private boolean isFavorite;
 	
 	// constructor

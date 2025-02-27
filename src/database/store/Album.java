@@ -28,24 +28,26 @@ public class Album {
 	
 	public int getYear() { return year; }
 	
-	public void getSongs() {
+	public String getSongs() {
+		StringBuilder sb = new StringBuilder();
 		for (Song s : this.songs) {
-			System.out.println(s);
-		}
+			sb.append(s.toString());
+		} sb.append("\n");
+		return sb.toString();
 	}
 	
 	// setters
 	public void addSong(Song song) {
-		this.songs.add(new Song(song));
+		this.songs.add(new Song(song)); // Use the copy constructor!
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Album name: " + this.name);
-		sb.append(" Author: " + this.artist);
-		sb.append(" Genre: " + this.genre);
-		sb.append(" Rlease year: " + this.year);
+		sb.append(", Author: " + this.artist);
+		sb.append(", Genre: " + this.genre);
+		sb.append(", Rlease year: " + this.year);
 		String songs = "";
 		for (Song s : this.songs) {
 			songs += s.getTitle();
