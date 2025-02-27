@@ -13,25 +13,48 @@ public class MusicLibrary extends MusicStore{
 	public MusicLibrary() {
 		this.userList = new ArrayList<>();
 		this.library = new ArrayList<>();
+		this.favorites = new HashMap<>();
 	}
 
 	//Getters
-	public ArrayList<PlayList> getUserList() {
+	public ArrayList<PlayList> getUserList() { ////////////////// DEBUG PURPOSES
 		return new ArrayList<>(userList);
 	}
-
-	public ArrayList<Object> getLibrary() { // Might need to make this into a deep copy
+	public ArrayList<Object> getLibrary() { /////////////////////  DEBUG PURPOSES
 		return new ArrayList<>(library);
 	}
 	
+	//Gen Methods
 	//Add Song/Album
-	public void addSong(Song S) {library.add(new Song(S));}
-	
-	public void addAlbum(Album A) {library.add(A);}
+	public void addSong(Song S) { 
+		if(checkStoreSong(S.getTitle())) { library.add(new Song(S));}
+	}
+	public void addAlbum(Album A) { 
+		if(checkStoreAlbum(A.getName())) { library.add(A); }
+	}
+	public void addFavorite(Song S) {	// Assumes Song is not already favorite
+		if(S.favoriteStatus()) {
+			favorites.put(S, S.favoriteStatus());
+		} else {
+			S.setFavorite();
+			favorites.put(S, S.favoriteStatus());
+		}
+	}
 
 	//Create PlayList
 	public void makePlayList(String name){ library.add(new PlayList(name));}
 	
+	//Rate a Song
+	public void rateSong(String stitle, int r) {
+		for(Song s: getSongs()) {
+			if(s.getTitle().equals(stitle)) {
+				if(r == 5) {
+					s.rate(r);
+					addFavorite(s);
+				} else { s.rate(r); }
+			}
+		}
+	}
 	
 	
 	//Methods that can retrieve
