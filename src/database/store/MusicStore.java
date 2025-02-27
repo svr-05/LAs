@@ -1,4 +1,4 @@
-package database.store;
+package LA1;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,8 +9,6 @@ import java.util.HashMap;
 public class MusicStore {
 	
 	private HashMap<String, Album> store;
-	// Lets add in a ArrayList or Hashmap for the playlist
-	// I also Think we should make another class called MusicLibrary.java This would help with storing the songs and printing them
 	
 	public MusicStore() {
 		this.store = new HashMap<String, Album>();
@@ -26,8 +24,7 @@ public class MusicStore {
 					String albumTitle = components[0].strip();
 					String artist = components[1].strip();
 					String albumFile = albumTitle + "_" + artist + ".txt"; // Assemble the name of the file containing file info
-					
-					parseAlbumInfo(albumTitle);
+					parseAlbumInfo(albumFile);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -65,7 +62,23 @@ public class MusicStore {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
+	
+	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the HashMap/Music Store
+		for(Album a: store.values()) {
+			for(Song s: a.getSongList()) {
+				if(s.getTitle().equals(sTitle)) return true;
+			}
+		}
+		return false;
+	}
+	
+	public boolean checkStoreAlbum(String aTitle){ // Searches for a Album in the HashMap/Music Store
+		for(String t: store.keySet()) {
+			if(t.equals(aTitle)) return true;
+		}
+		return false;
+	}
+	
 
 }
