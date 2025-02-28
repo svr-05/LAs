@@ -14,7 +14,10 @@ public class MusicStore {
 	
 	public MusicStore() {
 		this.store = new HashMap<String, Album>();
+		this.storesongs = new ArrayList<>();
 	}
+	
+	public ArrayList<SongData> getSongData(){ return new ArrayList<>(storesongs); }
 	
 	public void parseAlbums() {
 		try {
@@ -69,8 +72,8 @@ public class MusicStore {
 		}
 		
 	}
-
 	
+	//Checks if a song/album is in the store
 	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the HashMap/Music Store
 		for(SongData s: storesongs) {
 			if(s.getTitle().equals(sTitle)) return true;
@@ -83,6 +86,43 @@ public class MusicStore {
 			if(t.equals(aTitle)) return true;
 		}
 		return false;
+	}
+	
+	//Search Methods
+	//Search for Song by Tile or Artist
+	public void searchSongbyString(String a_t){
+		ArrayList<Song> songsByString = new ArrayList<>();
+		for(Album a: store.values()) {	// Makes sure to retrieve the song that does match the artist and title
+			for(Song s1: a.getSongList()) {
+				if(a_t.equals(s1.getTitle()) && a_t.equals(s1.getAuthor())) { songsByString.add(s1); }
+			}
+			for(Song sr: a.getSongList()) {	// Makes sure to retrieve the songs with the same artist or name
+				if (a_t.equals(sr.getTitle()) || a_t.equals(sr.getAuthor())){ songsByString.add(sr);}
+			}
+		}
+		if(songsByString.size() == 0) {
+			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+		}
+		for(Song p: songsByString) { // Prints the songs retrieved from the resulted iteration
+			System.out.println(p.toString());
+		}
+	}
+	
+	//Search for an Album by Title or Artist
+	public void searchAlbumbyString(String a_t){
+		ArrayList<Album> albumsByString = new ArrayList<>();
+		for(Album a1: store.values()) {	// Makes sure to retrieve the album that does match the artist and title
+			if(a_t.equals(a1.getName()) && a_t.equals(a1.getArtist())) { albumsByString.add(a1); }
+		}
+		for(Album ar: store.values()) {	// Makes sure to retrieve the albums with the same artist or name
+			if (a_t.equals(ar.getName()) || a_t.equals(ar.getArtist())){ albumsByString.add(ar);}
+		}
+		if(albumsByString.size() == 0) {
+			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+		}
+		for(Album p: albumsByString) { // Prints the albums retrieved from the resulted iteration
+			System.out.println(p.toString());
+		}
 	}
 	
 }
