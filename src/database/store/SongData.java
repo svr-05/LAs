@@ -1,4 +1,4 @@
-package database.store;
+package LA1;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,8 +27,8 @@ public class SongData {
 	}
 	
 	// copy constructor
-	public SongData(SongData song) {
-		this(song.title, song.author, song.album);
+	public SongData(SongData songData) {
+		this(songData.title, songData.author, songData.album);
 	}
 	
 	// getters
@@ -48,6 +48,7 @@ public class SongData {
 	public void setFavorite() { this.isFavorite = true; }
 	
 	public void rate(int r) {
+		if(r == 5) setFavorite();
 		this.rating = RATINGS.get(r);
 	}
 	
