@@ -173,7 +173,7 @@ public class LibraryModel extends MusicStore{
 	}
 	
 	//Search/Look at Favorites
-	public void searchFavorites(String a_t) { ////////////////////////// NEEDS A TOUCH UP
+	public void searchFavorites(String a_t) {
 		ArrayList<SongData> data = new ArrayList<>();
 		for(SongData d1: favorites.keySet()) {	// Makes sure to retrieve the favorited song that matches the search
 			if(a_t.equals(d1.getTitle()) && a_t.equals(d1.getAuthor())) {data.add(d1);}
@@ -185,13 +185,16 @@ public class LibraryModel extends MusicStore{
 			System.out.println("You don't have any favorites...LISTEN TO MORE MUSIC!!");
 		}
 		for(SongData p: favorites.keySet()) {
-			
-			
-			System.out.print();
+			System.out.print(p.getSongObject().toString() + ", Rating: " + p.getRating());
 		}
 	}
 	
 	//Look at Ratings
+	public void lookAtRatings() { /////////////////////////// Debugging purposes/Style
+		for(SongData dp : getDataInLibrary()) {
+			System.out.println(dp.getSongObject().toString() + ", Rating: " + dp.getRating());
+		}
+	}
 	
 	// Helper Methods that can retrieve
 	// Retrieves the list of Songs from Library
