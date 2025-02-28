@@ -43,11 +43,10 @@ public class Album {
 		sb.append("Album name: " + this.name);
 		sb.append(" Author: " + this.artist);
 		sb.append(" Genre: " + this.genre);
-		sb.append(" Rlease year: " + this.year);
-		String songs = "";
+		sb.append(" Release year: " + this.year);
+		String songs = "Songs: ";
 		for (Song s : this.songs) {
-			songs += s.getTitle();
-			songs += " ";
+			songs += "\n" + s.getTitle();
 		}
 		sb.append(songs.trim());
 		return sb.toString();
