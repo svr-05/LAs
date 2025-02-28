@@ -42,6 +42,10 @@ public class SongData {
 		return this.rating;
 	}
 	
+	public Song getSongObject() {
+		return new Song(this.title, this.author, this.album);
+	}
+	
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
 	// setters
