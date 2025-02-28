@@ -25,11 +25,24 @@ public class LibraryModel extends MusicStore{
 	}
 	
 	//Add Song/Album/PlayList/Favorite to Library
-	public void addSong(Song S) {
-		if(checkStoreSong(S.getTitle())) { library.add(new Song(S));}
+	public void addSong(Song S) { // Adds the song to the library. Unless the song is already in the library
+		if(checkStoreSong(S.getTitle())) {
+			if(!checkSongList(S)) {
+				library.add(new Song(S));
+			}
+		}
 	}
-	public void addAlbum(Album A) { 
-		if(checkStoreAlbum(A.getName())) { library.add(A); }
+	public void addAlbum(Album A) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
+		if(checkStoreAlbum(A.getName())) {
+			if(checkAlbumList(A)) {
+				library.add(A); 
+				for(Song s: A.getSongList()) {
+					if(!checkSongList(s)) {
+						addSong(s);
+					}
+				}
+			}
+		}
 	}
 	public void addFavorite(SongData S) {
 		if(S.favoriteStatus()) {
@@ -232,5 +245,25 @@ public class LibraryModel extends MusicStore{
 			}
 		}
 		return result;
+	}
+	
+	//Checks if a song is inside the Library
+	private boolean checkSongList(Song compare) {
+		for ( Song s : getSongs()) {
+			if(s.equals(compare)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//checks if a album is inside the library
+	private boolean checkAlbumList(Album compare) {
+		for(Album a : getAlbums()) {
+			if(a.equals(compare)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
