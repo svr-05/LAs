@@ -55,6 +55,19 @@ public class Album {
 		return sb.toString();
 	}
 	
-	
+	public boolean equals(Album A){
+		if( !(A.getName().equals(this.name)) || !(A.getArtist().equals(this.artist)) || !(A.getGenre().equals(this.genre)) || !(A.getYear() == this.year) ) {
+			return false;
+		}
+		if(songs.size() != A.getSongList().size()) {
+			return false;
+		}
+		for(int i = 0; i < this.songs.size(); i++) {
+			if(!songs.get(i).equals(A.getSongList().get(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 }
