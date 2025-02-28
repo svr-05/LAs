@@ -46,7 +46,7 @@ public class Album {
 		sb.append(" Release year: " + this.year);
 		String songs = "Songs: ";
 		for (Song s : this.songs) {
-			songs += "\n" + s.getTitle();
+			songs += "\n- " + s.getTitle();
 		}
 		sb.append(songs.trim());
 		return sb.toString();
