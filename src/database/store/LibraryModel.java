@@ -121,6 +121,7 @@ public class LibraryModel extends MusicStore{
 		return result;
 	}
 	
+	//Search Methods
 	//Search for Song by Tile or Artist
 	public void searchSongbyString(String a_t){
 		ArrayList<Song> songsByString = new ArrayList<>();
@@ -145,7 +146,7 @@ public class LibraryModel extends MusicStore{
 			if(a_t.equals(a1.getName()) && a_t.equals(a1.getArtist())) { albumsByString.add(a1); }
 		}
 		for(Album ar: getAlbums()) {	// Makes sure to retrieve the albums with the same artist or name
-			if (a_t.equals(ar.getName()) && a_t.equals(ar.getArtist())){ albumsByString.add(ar);}
+			if (a_t.equals(ar.getName()) || a_t.equals(ar.getArtist())){ albumsByString.add(ar);}
 		}
 		if(albumsByString.size() == 0) {
 			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
@@ -154,6 +155,43 @@ public class LibraryModel extends MusicStore{
 			System.out.println(p.toString());
 		}
 	}
+	
+	//Search for a PlayList
+	public void searchPlayListName(String name) {
+		ArrayList<PlayList> pList = new ArrayList<>();
+		for(PlayList pn : userList) {
+			if(pn.getTitle().equals(name)) {
+				pList.add(pn);
+			}
+		}
+		if(pList.size() == 0) {
+			System.out.println("Looks like you don't have a playList...MAKE ONE!!!");
+		}
+		for(PlayList p: pList) { // Prints the albums retrieved from the resulted iteration
+			System.out.println(p.toString());
+		}
+	}
+	
+	//Search/Look at Favorites
+	public void searchFavorites(String a_t) { ////////////////////////// NEEDS A TOUCH UP
+		ArrayList<SongData> data = new ArrayList<>();
+		for(SongData d1: favorites.keySet()) {	// Makes sure to retrieve the favorited song that matches the search
+			if(a_t.equals(d1.getTitle()) && a_t.equals(d1.getAuthor())) {data.add(d1);}
+		}
+		for(SongData dr: favorites.keySet()) {	// Makes sure to retrieve the favorited song with the same artist or name
+			if(a_t.equals(dr.getTitle()) || a_t.equals(dr.getAuthor())) {data.add(dr);}
+		}
+		if(data.size() == 0) {
+			System.out.println("You don't have any favorites...LISTEN TO MORE MUSIC!!");
+		}
+		for(SongData p: favorites.keySet()) {
+			
+			
+			System.out.print();
+		}
+	}
+	
+	//Look at Ratings
 	
 	// Helper Methods that can retrieve
 	// Retrieves the list of Songs from Library
