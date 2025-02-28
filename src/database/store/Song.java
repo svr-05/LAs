@@ -29,12 +29,5 @@ public class Song {
 		return String.format("Song title: %s, Author: %s, Album: %s",
 				             this.title, this.author, this.album);
 	}
-	
-	public boolean equals(Song S) {
-		if( (S.getTitle().equals(this.title)) && (S.getAuthor().equals(this.author)) && (S.getAlbum().equals(this.album))) {
-			return true;
-		}
-		return false;
-	}
 
 }

@@ -5,8 +5,8 @@ import java.util.ArrayList;
 public class Album {
 	// instance variables
 	private String name, 
-		artist,
-		genre;
+		           artist,
+		           genre;
 	private int year;
 	private ArrayList<Song> songs;
 
@@ -28,8 +28,8 @@ public class Album {
 	
 	public int getYear() { return year; }
 	
-	public ArrayList<Song> getSongList() {
-		return new ArrayList<Song>(songs);
+	public ArrayList<Song> getSongs() {
+		return new ArrayList<Song>(this.songs);
 	}
 	
 	// setters
@@ -37,20 +37,24 @@ public class Album {
 		this.songs.add(new Song(s));
 	}
 	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Album name: " + this.name);
-		sb.append(" Author: " + this.artist);
-		sb.append(" Genre: " + this.genre);
-		sb.append(" Release year: " + this.year);
-		String songs = "Songs: ";
+		sb.append(", Author: " + this.artist);
+		sb.append(", Genre: " + this.genre);
+		sb.append(", Release year: " + this.year);
+		sb.append("\nTracklist:\n");
+		String songs = "";
 		for (Song s : this.songs) {
-			songs += "\n- " + s.getTitle();
+			songs += s.getTitle();
+			songs += "\n";
 		}
 		sb.append(songs.trim());
 		return sb.toString();
 	}
+	
 	
 
 }
