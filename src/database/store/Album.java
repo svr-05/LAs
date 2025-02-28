@@ -1,4 +1,4 @@
-package database.store;
+package LA1;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,6 @@ public class Album {
 		           genre;
 	private int year;
 	private ArrayList<Song> songs;
-	
 
 	// constructor
 	public Album(String name, String artist, String genre, int year) {
@@ -34,8 +33,8 @@ public class Album {
 	}
 	
 	// setters
-	public void addSong(Song song) {
-		this.songs.add(new Song(song));
+	public void addSong(Song s) {
+		this.songs.add(new Song(s));
 	}
 	
 

@@ -41,13 +41,19 @@ public class SongData {
 	public String getRating() {
 		return this.rating;
 	}
+
 	
+  public Song getSongObject() {
+		return new Song(this.title, this.author, this.album);
+	}
+  
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
 	// setters
 	public void setFavorite() { this.isFavorite = true; }
 	
 	public void rate(int r) {
+    if(r == 5) setFavorite();
 		this.rating = RATINGS.get(r);
 	}
 	
