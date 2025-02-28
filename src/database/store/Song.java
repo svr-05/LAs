@@ -1,4 +1,4 @@
-package database.store;
+package LA1;
 
 public class Song {
 	private String title,
@@ -13,7 +13,7 @@ public class Song {
 	}
 	
 	// copy constructor
-	public Song(Song song) {
+	public Song(Song song) { // Need to change this to take in SongData
 		this(song.title, song.author, song.album);
 	}
 	
