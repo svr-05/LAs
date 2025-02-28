@@ -16,7 +16,8 @@ public class MusicStore {
 		this.store = new HashMap<String, Album>();
 		this.storesongs = new ArrayList<>();
 	}
-	
+
+	// Getter Method
 	public ArrayList<SongData> getSongData(){ return new ArrayList<>(storesongs); }
 	
 	public void parseAlbums() {
