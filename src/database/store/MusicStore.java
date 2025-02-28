@@ -1,6 +1,7 @@
 package LA1;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,13 +17,14 @@ public class MusicStore {
 		this.store = new HashMap<String, Album>();
 		this.storesongs = new ArrayList<>();
 	}
-
-	// Getter Method
+	
 	public ArrayList<SongData> getSongData(){ return new ArrayList<>(storesongs); }
 	
 	public void parseAlbums() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("albums.txt"));
+			//File file = new File("albums.txt");
+			//System.out.println("Looking for: " + file.getAbsolutePath());
 			String albumLine = "";
 			try {
 				while ((albumLine = br.readLine()) != null) {
@@ -31,7 +33,7 @@ public class MusicStore {
 					String artist = components[1].strip();
 					String albumFile = albumTitle + "_" + artist + ".txt"; // Assemble the name of the file containing file info
 					
-					parseAlbumInfo(albumTitle);
+					parseAlbumInfo(albumFile);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
