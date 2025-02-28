@@ -56,6 +56,5 @@ public class Album {
 		return sb.toString();
 	}
 	
-	
 
 }
