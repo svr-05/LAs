@@ -47,11 +47,21 @@ class TestSongData {
 		SongData otherSong = new SongData(otherS);
 		
 		assertFalse(song.favoriteStatus());
-		song.setFavorite();
+		song.changeFavorite();
 		assertTrue(song.favoriteStatus());
+		song.changeFavorite();
+		assertFalse(song.favoriteStatus());
 		
 		otherSong.rate(5);
-		assertTrue(song.favoriteStatus());
+		assertTrue(otherSong.favoriteStatus());
+	}
+	
+	@Test
+	void testGetSongObject() {
+		SongData songD = new SongData("Chasing Pavements", "Adele", "19");
+		Song song = new Song("Chasing Pavements", "Adele", "19");
+		
+		assertEquals(song, songD.getSongObject());
 	}
 	
 	

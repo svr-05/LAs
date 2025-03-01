@@ -1,13 +1,7 @@
-package database.model;
+package LA1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import database.store.Album;
-import database.store.MusicStore;
-import database.store.PlayList;
-import database.store.Song;
-import database.store.SongData;
 
 public class LibraryModel extends MusicStore{
 
@@ -31,17 +25,30 @@ public class LibraryModel extends MusicStore{
 	}
 	
 	//Add Song/Album/PlayList/Favorite to Library
-	public void addSong(Song S) {
-		if(checkStoreSong(S.getTitle())) { library.add(new Song(S));}
+	public void addSong(Song S) { // Adds the song to the library. Unless the song is already in the library
+		if(checkStoreSong(S.getTitle())) {
+			if(!checkSongList(S)) {
+				library.add(new Song(S));
+			}
+		}
 	}
-	public void addAlbum(Album A) { 
-		if(checkStoreAlbum(A.getName())) { library.add(A); }
+	public void addAlbum(Album A) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
+		if(checkStoreAlbum(A.getName())) {
+			if(checkAlbumList(A)) {
+				library.add(A); 
+				for(Song s: A.getSongList()) {
+					if(!checkSongList(s)) {
+						addSong(s);
+					}
+				}
+			}
+		}
 	}
 	public void addFavorite(SongData S) {
 		if(S.favoriteStatus()) {
 			favorites.put(S, S.favoriteStatus());
 		} else {
-			S.changeFavorite();
+			S.setFavorite();
 			favorites.put(S, S.favoriteStatus());
 		}
 	}
@@ -190,17 +197,17 @@ public class LibraryModel extends MusicStore{
 		if(data.size() == 0) {
 			System.out.println("You don't have any favorites...LISTEN TO MORE MUSIC!!");
 		}
-//		for(SongData p: favorites.keySet()) {
-//			System.out.print(p.getSongObject().toString() + ", Rating: " + p.getRating());
-//		}
+		for(SongData p: favorites.keySet()) {
+			System.out.print(p.getSongObject().toString() + ", Rating: " + p.getRating());
+		}
 	}
 	
 	//Look at Ratings
-//	public void lookAtRatings() { /////////////////////////// Debugging purposes/Style
-//		for(SongData dp : getDataInLibrary()) {
-//			System.out.println(dp.getSongObject().toString() + ", Rating: " + dp.getRating());
-//		}
-//	}
+	public void lookAtRatings() { /////////////////////////// Debugging purposes/Style
+		for(SongData dp : getDataInLibrary()) {
+			System.out.println(dp.getSongObject().toString() + ", Rating: " + dp.getRating());
+		}
+	}
 	
 	// Helper Methods that can retrieve
 	// Retrieves the list of Songs from Library
@@ -238,5 +245,25 @@ public class LibraryModel extends MusicStore{
 			}
 		}
 		return result;
+	}
+	
+	//Checks if a song is inside the Library
+	private boolean checkSongList(Song compare) {
+		for ( Song s : getSongs()) {
+			if(s.equals(compare)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//checks if a album is inside the library
+	private boolean checkAlbumList(Album compare) {
+		for(Album a : getAlbums()) {
+			if(a.equals(compare)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

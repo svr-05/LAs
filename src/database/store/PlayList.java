@@ -38,9 +38,9 @@ public class PlayList {
 	
 	//StringMethod
 	public String toString(){
-		String result = title + " : ";
-		for(Song song : body) {
-			result = "\n-" + song.toString();
+		String result = title + ": ";
+		for(Song s : body) {
+			result = "\n-" + s.toString();
 		}
 		result += "\n";
 		return result;

@@ -13,7 +13,7 @@ public class Song {
 	}
 	
 	// copy constructor
-	public Song(Song song) {
+	public Song(Song song) { // Need to change this to take in SongData
 		this(song.title, song.author, song.album);
 	}
 	
@@ -28,21 +28,27 @@ public class Song {
 	public boolean equals(Object o) {
 		if (o == null) return false;
 		
-		if (this == o) return true;
+		if (o == this) return true;
 		
-		if (getClass().getSimpleName() != o.getClass().getSimpleName()) return false;
+		else if (o.getClass() != getClass()) return false;
 		
-		if (!(this.title == ((Song) o).title) || 
-		    !(this.author == ((Song) o).author) || 
-		    !(this.album == ((Song) o).album)) return false;
-	
-		return true;
+		else {
+			return this.title == ((Song) o).title &&  
+		           this.author == ((Song) o).author && 
+		           this.album == ((Song) o).album; 
+		}
 	}
 	
 	@Override
 	public String toString() {
 		return String.format("Song title: %s, Author: %s, Album: %s",
 				             this.title, this.author, this.album);
+	}
+	public boolean equals(Song S) {
+		if( (S.getTitle().equals(this.title)) && (S.getAuthor().equals(this.author)) && (S.getAlbum().equals(this.album))) {
+			return true;
+		}
+	return false;
 	}
 
 }

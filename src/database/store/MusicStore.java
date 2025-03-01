@@ -20,9 +20,12 @@ public class MusicStore {
 	// Getter Method
 	public ArrayList<SongData> getSongData(){ return new ArrayList<>(storesongs); }
 	
+	
 	public void parseAlbums() {
 		try {
 			BufferedReader br = new BufferedReader(new FileReader("albums.txt"));
+			//File file = new File("albums.txt");
+			//System.out.println("Looking for: " + file.getAbsolutePath());
 			String albumLine = "";
 			try {
 				while ((albumLine = br.readLine()) != null) {
@@ -31,7 +34,7 @@ public class MusicStore {
 					String artist = components[1].strip();
 					String albumFile = albumTitle + "_" + artist + ".txt"; // Assemble the name of the file containing file info
 					
-					parseAlbumInfo(albumTitle);
+					parseAlbumInfo(albumFile);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -125,5 +128,4 @@ public class MusicStore {
 			System.out.println(p.toString());
 		}
 	}
-	
 }

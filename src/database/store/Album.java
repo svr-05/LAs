@@ -9,7 +9,6 @@ public class Album {
 		           genre;
 	private int year;
 	private ArrayList<Song> songs;
-	
 
 	// constructor
 	public Album(String name, String artist, String genre, int year) {
@@ -34,22 +33,26 @@ public class Album {
 	}
 	
 	// setters
-	public void addSong(Song song) {
-		this.songs.add(new Song(song));
+	public void addSong(Song s) {
+		this.songs.add(new Song(s));
 	}
 	
 	@Override
 	public boolean equals(Object o){
-		if (o == null || getClass().getSimpleName() != o.getClass().getSimpleName()) return false;
+		if (o == null) return false;
 		
 		if (o == this) return true;
 		
-		if (!(this.name == ((Album) o).name) || !(this.artist == ((Album) o).artist) ||
-			!(this.genre == ((Album) o).genre) || !(this.year == ((Album) o).year) || 
-			(this.songs.size() != ((Album) o).songs.size())) return false;
+		if (o.getClass()!= getClass()) return false;
+		
+		if (!(this.name == ((Album) o).name && 
+				   this.artist == ((Album) o).artist &&
+			       this.genre == ((Album) o).genre && 
+			       this.year == ((Album) o).year && 
+			       this.songs.size() == ((Album) o).songs.size())) return false;
 		
 		for (int i = 0; i < this.songs.size(); i++) {
-			if (! this.songs.get(i).equals(((Album) o).songs.get(i))) return false;
+			if (!this.songs.get(i).equals(((Album) o).songs.get(i))) return false;
 		}
 
 		return true;
@@ -71,6 +74,5 @@ public class Album {
 		sb.append(songs.trim());
 		return sb.toString();
 	}
-	
 
 }

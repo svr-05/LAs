@@ -39,11 +39,16 @@ public class SongData {
 	public String getAlbum() { return this.album; }
 	
 	public String getRating() { return this.rating; }
+
 	
+  public Song getSongObject() {
+		return new Song(this.title, this.author, this.album);
+	}
+  
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
 	// setters
-	public void setFavorite() { this.isFavorite = true; }
+	public void changeFavorite() { this.isFavorite = !this.isFavorite; }
 	
 	public void rate(int r) {
 		try {
@@ -52,7 +57,7 @@ public class SongData {
 		catch (IndexOutOfBoundsException e) {
 			this.rating = null;
 		}
-		if (r == 5) setFavorite();
+		if (r == 5) { this.isFavorite = true; }
 	}
 	
 	@Override
