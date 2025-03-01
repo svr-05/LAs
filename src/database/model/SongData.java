@@ -17,13 +17,13 @@ public class SongData {
 	private boolean isFavorite;
 	
 	// constructor
-	public SongData(String title, String author, String album) { // We need input validation. Design by contract?
+	public SongData(String title, String author, String album) {
 		this.title = title;
 		this.author = author;
 		this.album = album;
 		RATINGS = new ArrayList<String>(Arrays.asList
 				(null, "★", "★ ★", "★ ★ ★", "★ ★ ★ ★", "★ ★ ★ ★ ★"));
-		Collections.unmodifiableList(RATINGS); // makes RATING immutable, throws UnsupportedOperationException
+		Collections.unmodifiableList(RATINGS); // makes RATING immutable
 		this.rating = RATINGS.get(0);
 		this.isFavorite = false;
 	}

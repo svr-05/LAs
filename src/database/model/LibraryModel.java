@@ -28,22 +28,29 @@ public class LibraryModel{
 		return new ArrayList<>(library);
 	}
 	
-	//Add Song/Album/PlayList/Favorite to Library
-	public void addSong(String Stitle) { // Adds the song to the library. Unless the song is already in the library
-		MusicStore MS = new MusicStore();
-		MS.parseAlbums();
-		for(SongData d : MS.getSongData()) {
-			if(Stitle.toLowerCase().equals(d.getTitle().toLowerCase())) {
-				Song S = d.getSongObject();
-				if(MS.checkStoreSong(S.getTitle())) {
-					if(!checkSongList(S)) {
-						library.add(new Song(S));
-						System.out.println("Songs have been Added :)");
-					}
-				}
-			}
-		}
+	public void addSong(String Stitle) {
+	    MusicStore MS = new MusicStore();
+	    MS.parseAlbums();
+	    
+	    boolean songFound = false;
+	    for (SongData d : MS.getSongData()) {
+	        if (Stitle.toLowerCase().equals(d.getTitle().toLowerCase())) {
+	            Song S = d.getSongObject();
+	            if (MS.checkStoreSong(S.getTitle())) {
+	                if (!checkSongList(S)) {
+	                    library.add(S);
+	                    System.out.println("Song have been Added!");
+	                    songFound = true;
+	                }
+	            }
+	        }
+	    }  
+	    if (!songFound) {
+	        System.out.println("Song not found in the Music Store.");
+	    }
 	}
+
+
 	public void addAlbum(String Atitle) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
 		MusicStore MS = new MusicStore();
 		MS.parseAlbums();
@@ -243,7 +250,7 @@ public class LibraryModel{
 	
 	// Helper Methods that can retrieve
 	// Retrieves the list of Songs from Library
-	private ArrayList<Song> getSongs(){
+	public ArrayList<Song> getSongs(){
 		ArrayList<Song> result = new ArrayList<>();
 		for(Object elem: library) {
 			if(elem instanceof Song) {
@@ -255,7 +262,7 @@ public class LibraryModel{
 	}
 	
 	// Retrieves the list of Albums from library
-	private ArrayList<Album> getAlbums(){
+	public ArrayList<Album> getAlbums(){
 		ArrayList<Album> result = new ArrayList<>();
 		for(Object elem: library) {
 			if(elem instanceof Album) {
