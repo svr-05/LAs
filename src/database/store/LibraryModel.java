@@ -1,4 +1,4 @@
-package LA1;
+package database.store;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public class LibraryModel extends MusicStore{
 		if(checkStoreAlbum(A.getName())) {
 			if(checkAlbumList(A)) {
 				library.add(A); 
-				for(Song s: A.getSongList()) {
+				for(Song s: A.getSongs()) {
 					if(!checkSongList(s)) {
 						addSong(s);
 					}
@@ -48,7 +48,7 @@ public class LibraryModel extends MusicStore{
 		if(S.favoriteStatus()) {
 			favorites.put(S, S.favoriteStatus());
 		} else {
-			S.setFavorite();
+			S.changeFavorite();
 			favorites.put(S, S.favoriteStatus());
 		}
 	}

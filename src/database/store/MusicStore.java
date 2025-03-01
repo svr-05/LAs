@@ -49,8 +49,7 @@ public class MusicStore {
 
 	private void parseAlbumInfo(String albumTitle) {
 		// TODO Auto-generated method stub
-		try {
-			BufferedReader br = new BufferedReader(new FileReader(albumTitle));
+		try (BufferedReader br = new BufferedReader(new FileReader(albumTitle))) {
 			try {
 				String lineOne = br.readLine();
 				String[] info = lineOne.split(",");
@@ -71,6 +70,9 @@ public class MusicStore {
 				e.printStackTrace();
 			}
 		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -97,15 +99,12 @@ public class MusicStore {
 	public void searchSongbyString(String a_t){
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Album a: store.values()) {	// Makes sure to retrieve the song that does match the artist and title
-			for(Song s1: a.getSongs()) {
-				if(a_t.equals(s1.getTitle()) && a_t.equals(s1.getAuthor())) { songsByString.add(s1); }
-			}
 			for(Song sr: a.getSongs()) {	// Makes sure to retrieve the songs with the same artist or name
-				if (a_t.equals(sr.getTitle()) || a_t.equals(sr.getAuthor())){ songsByString.add(sr);}
+				if (a_t.toLowerCase().equals(sr.getTitle().toLowerCase()) || a_t.toLowerCase().equals(sr.getAuthor().toLowerCase())){ songsByString.add(sr);}
 			}
 		}
 		if(songsByString.size() == 0) {
-			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+			System.out.println("Item is not in Store...Sorry :/");
 		}
 		for(Song p: songsByString) { // Prints the songs retrieved from the resulted iteration
 			System.out.println(p.toString());
@@ -115,14 +114,11 @@ public class MusicStore {
 	//Search for an Album by Title or Artist
 	public void searchAlbumbyString(String a_t){
 		ArrayList<Album> albumsByString = new ArrayList<>();
-		for(Album a1: store.values()) {	// Makes sure to retrieve the album that does match the artist and title
-			if(a_t.equals(a1.getName()) && a_t.equals(a1.getArtist())) { albumsByString.add(a1); }
-		}
 		for(Album ar: store.values()) {	// Makes sure to retrieve the albums with the same artist or name
-			if (a_t.equals(ar.getName()) || a_t.equals(ar.getArtist())){ albumsByString.add(ar);}
+			if (a_t.toLowerCase().equals(ar.getName().toLowerCase()) || a_t.toLowerCase().equals(ar.getArtist().toLowerCase())){ albumsByString.add(ar);}
 		}
 		if(albumsByString.size() == 0) {
-			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+			System.out.println("Item is not in Store...Sorry :/");
 		}
 		for(Album p: albumsByString) { // Prints the albums retrieved from the resulted iteration
 			System.out.println(p.toString());

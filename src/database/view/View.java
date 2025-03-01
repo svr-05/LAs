@@ -1,6 +1,9 @@
-package LA1;
+package database.view;
 
 import java.util.Scanner;
+
+import database.store.LibraryModel;
+import database.store.MusicStore;
 
 public class View {
 	
