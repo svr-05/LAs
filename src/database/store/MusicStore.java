@@ -18,7 +18,15 @@ public class MusicStore {
 		this.storesongs = new ArrayList<>();
 	}
 	
-	public ArrayList<SongData> getSongData(){ return new ArrayList<>(storesongs); }
+	public ArrayList<SongData> getSongData() {
+	    ArrayList<SongData> copy = new ArrayList<>();
+	    for (SongData song : storesongs) {
+	        copy.add(new SongData(song));
+	    }
+	    return copy;
+	}
+	
+	public HashMap<String, Album> getStore(){ return new HashMap<>(store); }
 	
 	public void parseAlbums() {
 		try {
