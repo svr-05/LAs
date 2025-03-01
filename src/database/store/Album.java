@@ -62,10 +62,10 @@ public class Album {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Album name: " + this.name);
-		sb.append(" Author: " + this.artist);
-		sb.append(" Genre: " + this.genre);
-		sb.append(" Release year: " + this.year);
-		String songs = "Songs: ";
+		sb.append(", Author: " + this.artist);
+		sb.append(", Genre: " + this.genre);
+		sb.append(", Release year: " + this.year);
+		String songs = "Tracklist:";
 		for (Song s : this.songs) {
 			songs += "\n- " + s.getTitle();
 		}

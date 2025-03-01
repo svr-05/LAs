@@ -1,10 +1,11 @@
-package database.store;
+package database.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import database.model.SongData;
+import database.store.Album;
+import database.store.Song;
 
 class TestSongData {
 	
@@ -64,6 +65,12 @@ class TestSongData {
 		Song song = new Song("Chasing Pavements", "Adele", "19");
 		
 		assertEquals(song, songD.getSongObject());
+	}
+	
+	@Test
+	void testToString() {
+		String songStr = HCV.toString();
+		assertEquals(songStr, "Song title: Hola Como Vas, Author: Eladio Carrion, Album: Sauce Boyz 2");
 	}
 	
 	

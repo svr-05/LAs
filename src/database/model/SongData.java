@@ -67,6 +67,5 @@ public class SongData {
 		return String.format("Song title: %s, Author: %s, Album: %s",
 				             this.title, this.author, this.album);
 	}
-	
 
 }
