@@ -223,13 +223,6 @@ public class View {
 					} while(user_num != 1 && user_num != 2);
 					continue;
 				}
-				
-				/*do {
-					System.out.print("Would you like to quit(Input Q)? ");
-					while_input = scanner.nextLine();
-				} while(while_input.isEmpty());
-				user_char = while_input.toLowerCase().charAt(0);
-				System.out.println();*/
 			}
 			System.out.print("OK HAVE A NICE DAY!!!");
 		}
