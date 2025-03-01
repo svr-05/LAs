@@ -3,7 +3,7 @@ package LA1;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LibraryModel extends MusicStore{
+public class LibraryModel{
 
 	private ArrayList<PlayList> userList;
 	private ArrayList<Object> library; // Holds in a Song or Album
@@ -25,20 +25,35 @@ public class LibraryModel extends MusicStore{
 	}
 	
 	//Add Song/Album/PlayList/Favorite to Library
-	public void addSong(Song S) { // Adds the song to the library. Unless the song is already in the library
-		if(checkStoreSong(S.getTitle())) {
-			if(!checkSongList(S)) {
-				library.add(new Song(S));
+	public void addSong(String Stitle) { // Adds the song to the library. Unless the song is already in the library
+		MusicStore MS = new MusicStore();
+		MS.parseAlbums();
+		for(SongData d : MS.getSongData()) {
+			if(Stitle.toLowerCase().equals(d.getTitle().toLowerCase())) {
+				Song S = d.getSongObject();
+				if(MS.checkStoreSong(S.getTitle())) {
+					if(!checkSongList(S)) {
+						library.add(new Song(S));
+						System.out.println("Songs have been Added :)");
+					}
+				}
 			}
 		}
 	}
-	public void addAlbum(Album A) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
-		if(checkStoreAlbum(A.getName())) {
-			if(checkAlbumList(A)) {
-				library.add(A); 
-				for(Song s: A.getSongList()) {
-					if(!checkSongList(s)) {
-						addSong(s);
+	public void addAlbum(String Atitle) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
+		MusicStore MS = new MusicStore();
+		MS.parseAlbums();
+		for(Album A : MS.getStore().values()) {
+			if(Atitle.toLowerCase().equals(A.getName().toLowerCase())) {
+				if(MS.checkStoreAlbum(A.getName())) {
+					if(checkAlbumList(A)) {
+						library.add(A); 
+						for(Song s: A.getSongList()) {
+							if(!checkSongList(s)) {
+								addSong(s.getTitle());
+								System.out.println("Albums have been Added :)");
+							}
+						}
 					}
 				}
 			}
@@ -52,7 +67,10 @@ public class LibraryModel extends MusicStore{
 			favorites.put(S, S.favoriteStatus());
 		}
 	}
-	public void makePlayList(String name){ userList.add(new PlayList(name));}
+	public void makePlayList(String name){ 
+		userList.add(new PlayList(name));
+		System.out.println("Playlist has been made!");
+		}
 	
 	//Rate a Song
 	public void rateSong(String stitle, int r) {
@@ -68,19 +86,29 @@ public class LibraryModel extends MusicStore{
 	
 	//Modify PlayList
 	//Add Song
-	public void addSongToPlayList(String PName, Song S) {
+	public void addSongToPlayList(String PName, String songname) {
 		for(PlayList p: userList) {
-			if(p.getTitle().equals(PName)) {
-				p.addSong(S);
+			if(p.getTitle().toLowerCase().equals(PName.toLowerCase())) {
+				for(Song s : getSongs()) {
+					if(s.getTitle().toLowerCase().equals(songname.toLowerCase())) {
+						p.addSong(s);
+						System.out.println("Song has been added :D");
+					}
+				}
 			}
 		}
 	}
 	
 	//Remove Song
-	public void removeSongFromPlayList(String PName, Song S) {
+	public void removeSongFromPlayList(String PName, String songname) {
 		for(PlayList p: userList) {
-			if(p.getTitle().equals(PName)) {
-				p.remove(S);
+			if(p.getTitle().toLowerCase().equals(PName.toLowerCase())) {
+				for(Song s : getSongs()) {
+					if(s.getTitle().toLowerCase().equals(songname.toLowerCase())) {
+						p.remove(s);
+						System.out.println("Song has been removed D:");
+					}
+				}
 			}
 		}
 	}
@@ -178,7 +206,7 @@ public class LibraryModel extends MusicStore{
 			}
 		}
 		if(pList.size() == 0) {
-			System.out.println("Looks like you don't have a playList...MAKE ONE!!!");
+			System.out.println("Looks like you don't have this as a playList...MAKE ONE!!!");
 		}
 		for(PlayList p: pList) { // Prints the albums retrieved from the resulted iteration
 			System.out.println(p.toString());
@@ -236,8 +264,10 @@ public class LibraryModel extends MusicStore{
 	
 	//Retrieve the List of SONG DATA
 	private ArrayList<SongData> getDataInLibrary(){
+		MusicStore MS = new MusicStore();
+		MS.parseAlbums();
 		ArrayList<SongData> result = new ArrayList<>();
-		for(SongData d : getSongData()) {
+		for(SongData d : MS.getSongData()) {
 			for(Song s: getSongs()) {
 				if(d.getTitle().equals(s.getTitle())) {
 					result.add(d);
