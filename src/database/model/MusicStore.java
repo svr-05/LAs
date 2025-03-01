@@ -29,7 +29,7 @@ public class MusicStore {
 	    return copy;
 	}
 	
-	public HashMap<String, Album> getStore(){ return new HashMap<>(store); }
+	public HashMap<String, Album> getStore() { return new HashMap<>(this.store); }
 	
 	public void parseAlbums() {
 		try {
