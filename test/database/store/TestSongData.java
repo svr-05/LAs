@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import database.model.SongData;
+
 class TestSongData {
 	
 	SongData HCV = new SongData("Hola Como Vas", "Eladio Carrion", "Sauce Boyz 2");

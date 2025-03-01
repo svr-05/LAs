@@ -2,8 +2,8 @@ package database.view;
 
 import java.util.Scanner;
 
-import database.store.LibraryModel;
-import database.store.MusicStore;
+import database.model.LibraryModel;
+import database.model.MusicStore;
 
 public class View {
 	

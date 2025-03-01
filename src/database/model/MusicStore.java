@@ -1,10 +1,14 @@
-package database.store;
+package database.model;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+
+import database.store.Album;
+import database.store.Song;
+
 import java.util.ArrayList;
 
 public class MusicStore {

@@ -1,8 +1,10 @@
-package database.store;
+package database.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+
+import database.store.Song;
 
 public class SongData {
 	// instance variables
