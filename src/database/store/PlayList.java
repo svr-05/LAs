@@ -12,11 +12,6 @@ public class PlayList {
 		this.title = title;
 		this.body = new ArrayList<Song>();
 	}
-	
-	public PlayList(PlayList p) {
-		this.title = p.getTitle();
-		this.body = p.getBody();
-	}
 
 	//Getters
 	public String getTitle() {
@@ -37,13 +32,15 @@ public class PlayList {
 	}
 	
 	//StringMethod
+	@Override
 	public String toString(){
-		String result = title + ": ";
+		String result = "";
+		result += this.title + ": ";
 		for(Song s : body) {
-			result = "\n-" + s.toString();
+			result += "\n-" + s.toString();
 		}
 		result += "\n";
 		return result;
 	}
-
+	
 }
