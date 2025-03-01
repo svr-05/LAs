@@ -15,7 +15,7 @@ public class SongData {
 	private boolean isFavorite;
 	
 	// constructor
-	public SongData(String title, String author, String album) {
+	public SongData(String title, String author, String album) { // We need input validation. Design by contract?
 		this.title = title;
 		this.author = author;
 		this.album = album;
@@ -38,9 +38,7 @@ public class SongData {
 	
 	public String getAlbum() { return this.album; }
 	
-	public String getRating() {
-		return this.rating;
-	}
+	public String getRating() { return this.rating; }
 	
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
@@ -48,7 +46,13 @@ public class SongData {
 	public void setFavorite() { this.isFavorite = true; }
 	
 	public void rate(int r) {
-		this.rating = RATINGS.get(r);
+		try {
+			 this.rating = RATINGS.get(r);
+		} 
+		catch (IndexOutOfBoundsException e) {
+			this.rating = null;
+		}
+		if (r == 5) setFavorite();
 	}
 	
 	@Override

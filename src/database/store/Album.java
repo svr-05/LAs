@@ -38,6 +38,22 @@ public class Album {
 		this.songs.add(new Song(song));
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if (o == null || getClass().getSimpleName() != o.getClass().getSimpleName()) return false;
+		
+		if (o == this) return true;
+		
+		if (!(this.name == ((Album) o).name) || !(this.artist == ((Album) o).artist) ||
+			!(this.genre == ((Album) o).genre) || !(this.year == ((Album) o).year) || 
+			(this.songs.size() != ((Album) o).songs.size())) return false;
+		
+		for (int i = 0; i < this.songs.size(); i++) {
+			if (! this.songs.get(i).equals(((Album) o).songs.get(i))) return false;
+		}
+
+		return true;
+	}
 
 	@Override
 	public String toString() {

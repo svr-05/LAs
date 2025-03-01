@@ -25,6 +25,21 @@ public class Song {
 	public String getAlbum() { return this.album; }
 	
 	@Override
+	public boolean equals(Object o) {
+		if (o == null) return false;
+		
+		if (this == o) return true;
+		
+		if (getClass().getSimpleName() != o.getClass().getSimpleName()) return false;
+		
+		if (!(this.title == ((Song) o).title) || 
+		    !(this.author == ((Song) o).author) || 
+		    !(this.album == ((Song) o).album)) return false;
+	
+		return true;
+	}
+	
+	@Override
 	public String toString() {
 		return String.format("Song title: %s, Author: %s, Album: %s",
 				             this.title, this.author, this.album);
