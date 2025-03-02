@@ -1,8 +1,11 @@
-package database.store;
+package database.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import database.model.PlayList;
+import database.model.Song;
 
 class TestPlayList {
 	

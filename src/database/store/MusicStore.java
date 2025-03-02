@@ -1,12 +1,13 @@
-package database.model;
+package database.store;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
 
-import database.store.Album;
-import database.store.Song;
+import database.model.Album;
+import database.model.Song;
+import database.model.SongData;
 
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ public class MusicStore {
 		this.store = new HashMap<String, Album>();
 		this.storesongs = new ArrayList<>();
 	}
-	
+	// return an unmodifiable list of SongData objects
 	public ArrayList<SongData> getSongData() {
 	    ArrayList<SongData> copy = new ArrayList<>();
 	    for (SongData song : storesongs) {
@@ -32,8 +33,6 @@ public class MusicStore {
 	
 	public void parseAlbums() {
 		try (BufferedReader br = new BufferedReader(new FileReader("albums.txt"))) {
-			//File file = new File("albums.txt");
-			//System.out.println("Looking for: " + file.getAbsolutePath());
 			String albumLine = "";
 			while ((albumLine = br.readLine()) != null) {
 					String[] components = albumLine.split(",");
@@ -59,7 +58,7 @@ public class MusicStore {
 				
 			String tracklistSong = "";
 			while ((tracklistSong = br.readLine()) != null) {
-				SongData songData = new SongData(tracklistSong, info[1], info[0]); // Disorganized, possible bugs
+				SongData songData = new SongData(tracklistSong, info[1], info[0]);
 				Song song = new Song(tracklistSong, info[1], info[0]);
 				storesongs.add(songData);
 				album.addSong(song); // add all the songs in the tracklist to the array of songs
@@ -71,14 +70,19 @@ public class MusicStore {
 	}
 	
 	//Checks if a song/album is in the store
-	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the HashMap/Music Store
+	/*
+	 * @pre: sTitle != null
+	 */
+	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the array of songs
 		for(SongData s: storesongs) {
-			if(s.getTitle().equals(sTitle)) return true;
+			if(s.getTitle().equalsIgnoreCase(sTitle)) return true;
 		}
 		return false;
 	}
-	
-	public boolean checkStoreAlbum(String aTitle){ // Searches for a Album in the HashMap/Music Store
+	/*
+	 * @pre: sTitle != null
+	 */
+	public boolean checkStoreAlbum(String aTitle){ // Searches for a Album in the HashMap
 		for(String t: store.keySet()) {
 			if(t.equals(aTitle)) return true;
 		}
@@ -87,15 +91,19 @@ public class MusicStore {
 	
 	//Search Methods
 	//Search for Song by Tile or Artist
+	/*
+	 * @pre: a_t != null
+	 */
 	public void searchSongbyString(String a_t){
 		ArrayList<Song> songsByString = new ArrayList<>();
-		for(Album a: store.values()) {	// Makes sure to retrieve the song that does match the artist and title
+		for(Album a: store.values()) {	// Makes sure to retrieve the song that does match the name of the song
 			for(Song s1: a.getSongs()) {
 				if(a_t.equalsIgnoreCase(s1.getTitle())) { 
 					songsByString.add(s1); 
 				}
 			}
 		}
+		// handle the case where there are no matched songs
 		if(songsByString.isEmpty()) {
 			System.out.println("Item is not in your store");
 		}
@@ -103,10 +111,13 @@ public class MusicStore {
 			System.out.println(p);
 		}
 	}
-	
+	// this method mirrors the logic as the one above but it makes sure to also verify the author name 
+	/*
+	 * @pre: sTitle != null && author != null
+	 */
 	public void searchSongByTitleArtist(String title, String author) {
 		ArrayList<Song> songsByString = new ArrayList<>();
-		for(Album a: store.values()) {	// Makes sure to retrieve the song that does match the artist and title
+		for(Album a: store.values()) {
 			for(Song s1: a.getSongs()) {
 				if(title.equalsIgnoreCase(s1.getTitle()) && author.equalsIgnoreCase(s1.getAuthor())) { 
 					songsByString.add(s1); 
@@ -122,6 +133,9 @@ public class MusicStore {
 	}
 	
 	//Search for an Album by Title
+	/*
+	 * @pre: a_t != null
+	 */
 	public void searchAlbumbyString(String a_t){
 		ArrayList<Album> albumsByString = new ArrayList<>();
 		for(Album a1: store.values()) {	// Makes sure to retrieve the album that does match the artist and title
@@ -134,7 +148,10 @@ public class MusicStore {
 			System.out.println(p.toString());
 		}
 	}
-	
+	// mirrors the one above it but verifies the artist as well
+	/*
+	 * @pre: title != null && artist != null
+	 */
 	public void searchAlbumbyTitleAuthor(String title, String artist){
 		ArrayList<Album> albumsByString = new ArrayList<>();
 		for(Album a1: store.values()) {	// Makes sure to retrieve the album that does match the artist and title

@@ -1,6 +1,9 @@
-package database.store;
+package database.model;
 
 import org.junit.jupiter.api.Test;
+
+import database.model.Album;
+import database.model.Song;
 
 import static org.junit.jupiter.api.Assertions.*;
 

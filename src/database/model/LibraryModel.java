@@ -3,14 +3,22 @@ package database.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import database.store.Album;
-import database.store.PlayList;
-import database.store.Song;
+import database.store.MusicStore;
 
 public class LibraryModel{
+	public static void main(String[] args) {
+		LibraryModel lB = new LibraryModel();
+		lB.makePlayList("S");
+		lB.addSong("DayDreamer");
+		
+		lB.addSongToPlayList("S", "DayDreamer");
+		System.out.println(lB.getUserList().size());
+		lB.removeSongFromPlayList("S", "DayDreamer");
+		System.out.println(lB.getUserList().size());
+	}
 
-	private ArrayList<PlayList> userList;
-	private ArrayList<Song> songLibrary; // Holds in a Song or Album
+	private ArrayList<PlayList> userList; 
+	private ArrayList<Song> songLibrary; // Holds in a Song
 	private ArrayList<Album> albumLibrary;
 	private HashMap<SongData, Boolean> favorites; // Holds the songs that are favorited
 	private MusicStore musicStore;
@@ -38,11 +46,11 @@ public class LibraryModel{
 	
 	public void addSong(String Stitle) {
 	    boolean songFound = false;
-	    for (SongData sD : musicStore.getSongData()) { // search in the mutable song objects (basically chack if it's in the library)
-	        if (Stitle.equalsIgnoreCase(sD.getTitle())) { // to see if one of them 
-	            Song S = sD.getSongObject();
+	    for (SongData sD : musicStore.getSongData()) { // retrieve all the songs in the library
+	        if (Stitle.equalsIgnoreCase(sD.getTitle())) {  // verify there is a SongData object that matches the title of the song
+	            Song S = sD.getSongObject(); // retuerns a copy of the SongObject
 	            if (musicStore.checkStoreSong(S.getTitle())) {
-	                if (!checkSongList(S)) {
+	                if (!checkSongList(S)) { // add the song if it's not yet in the library
 	                    songLibrary.add(S);
 	                    System.out.println("Song has been Added!");
 	                    songFound = true;
@@ -55,9 +63,9 @@ public class LibraryModel{
 	    }
 	}
 
-
+	// basically, mirror the addSong() method but for Album
 	public void addAlbum(String aTitle) { // Adds the album and its songs. Adds each song in album if the song is not already in the library
-		for(Album A : musicStore.getStore().values()) {
+		for(Album A : musicStore.getStore().values()) { // check in the array of Albums from the music store (hash map)
 			if(aTitle.equalsIgnoreCase(A.getName())) {
 				if(musicStore.checkStoreAlbum(A.getName())) {
 					if(!checkAlbumList(A)) {
@@ -68,6 +76,7 @@ public class LibraryModel{
 							}
 						}
 						System.out.println("Albums have been Added :)");
+						break;
 					}
 					else System.out.println("Album already in the library");
 				}
@@ -76,13 +85,21 @@ public class LibraryModel{
 	}
 	/*
 	 * @pre: S != null
+	 * 
 	 */
-	public void addFavorite(SongData S) {
-		if(!favorites.containsKey(S)) {
-			S.changeFavorite();
-		}
-		favorites.put(S, S.favoriteStatus());
+	public void addFavorite(String songTitle) {
+	    for (SongData d : getDataInLibrary()) {
+	        if (d.getTitle().equalsIgnoreCase(songTitle)) {
+	            d.changeFavorite();
+	            favorites.put(d, d.favoriteStatus());
+	            System.out.println("Done!");
+	            return;
+	        }
+	    }
+	    System.out.println("Song not found in the library.");
 	}
+
+
 	/*
 	 * @pre: name != null
 	 */
@@ -93,15 +110,15 @@ public class LibraryModel{
 	
 	//Rate a Song
 	/*
-	 * @pre: sTitle != null && r > 0 && r < 6
+	 * @pre: sTitle != null
 	 */
 	public void rateSong(String sTitle, int r) {
 		boolean found = false; // mirror the strategy of addSong
-		for(SongData d : getDataInLibrary()) {
+		for(SongData d : getDataInLibrary()) { // check in all of the SongData objects in the array
 			if(d.getTitle().equalsIgnoreCase(sTitle)) {
 				d.rate(r);
 				if(r == 5) {
-					addFavorite(d);
+					addFavorite(d.getTitle());
 				}
 				found = true;
 				break;
@@ -116,7 +133,8 @@ public class LibraryModel{
 	 * @pre: pName != null && songName != null
 	 */
 	public void addSongToPlayList(String pName, String songName) {
-		for(PlayList p : userList) {
+		// compare
+		for(PlayList p : userList) { // mirror the same logic modeled above
 			if(p.getTitle().equalsIgnoreCase(pName)) {
 				for(Song s : songLibrary) {
 					if(s.getTitle().equalsIgnoreCase((songName))) {
@@ -181,7 +199,7 @@ public class LibraryModel{
 		return result;
 	}
 	
-	//Returns a list of PlayLists from the Library list
+	//Returns a list of strings with the playlist titles from the Library list
 	public ArrayList<String> getPlayList(){
 		ArrayList<String> result = new ArrayList<>();
 		for(PlayList p : userList) {
@@ -200,14 +218,14 @@ public class LibraryModel{
 	}
 	
 	//Search Methods
-	//Search for Song by Tile or Artist
+	//Search for Song by Tile
 	/*
 	 * @pre: a_t != null
 	 */
 	public void searchSongbyString(String a_t){
 		ArrayList<Song> songsByString = new ArrayList<>();
-		for(Song s1: songLibrary) {	// Makes sure to retrieve the song that does match the artist and title
-			if(a_t.equalsIgnoreCase(s1.getTitle()) || a_t.equalsIgnoreCase(s1.getAuthor())) { 
+		for(Song s1: songLibrary) {	// Makes sure to retrieve the song that does match the artist
+			if(a_t.equalsIgnoreCase(s1.getTitle())) { 
 				songsByString.add(s1); 
 			}
 		}
@@ -222,10 +240,13 @@ public class LibraryModel{
 	}
 	
 	//Search for an Album by Title or Artist
+	/*
+	 * @pre: a_t != null
+	 */
 	public void searchAlbumbyString(String a_t){
 		ArrayList<Album> albumsByString = new ArrayList<>();
-		for(Album a1: albumLibrary) {	// Makes sure to retrieve the album that does match the artist and title
-			if(a_t.equalsIgnoreCase(a1.getName()) || a_t.equalsIgnoreCase(a1.getArtist())) { 
+		for(Album a1: albumLibrary) {	// Makes sure to retrieve the album that does match the artist
+			if(a_t.equalsIgnoreCase(a1.getName())) { 
 				albumsByString.add(a1); 
 			}
 		}
@@ -239,11 +260,15 @@ public class LibraryModel{
 		}
 
 	}
-	
+	/*
+	 * @pre: title != null && artist != null
+	 */
 	public void searchAlbumbyTitleAuthor(String title, String artist){
 		ArrayList<Album> albumsByString = new ArrayList<>();
 		for(Album a1: albumLibrary) {	// Makes sure to retrieve the album that does match the artist and title
-			if(title.equalsIgnoreCase(a1.getName()) && artist.equalsIgnoreCase(a1.getArtist())) { albumsByString.add(a1); }
+			if(title.equalsIgnoreCase(a1.getName()) && artist.equalsIgnoreCase(a1.getArtist())) { 
+				albumsByString.add(a1);
+			}
 		}
 		if(albumsByString.isEmpty()) {
 			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
@@ -252,7 +277,9 @@ public class LibraryModel{
 			System.out.println(p.toString());
 		}
 	}
-	
+	/*
+	 * @pre: title != null && author != null
+	 */
 	public void searchSongByTitleArtist(String title, String author) {
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Song s: songLibrary) {	// Makes sure to retrieve the song that does match the artist and title
@@ -270,6 +297,10 @@ public class LibraryModel{
 	}
 	
 	//Search for a PlayList
+	/*
+	 * @pre: name != null
+	 */
+	// mirror the same logic from above but only for playlist name
 	public void searchPlayListName(String name) {
 		ArrayList<PlayList> pList = new ArrayList<>();
 		for(PlayList pn : userList) {
@@ -288,11 +319,14 @@ public class LibraryModel{
 	}
 	
 	//Search/Look at Favorites
+	/*
+	 * @pre: a_t != null
+	 */
 	public void searchFavorites(String a_t) {
 		ArrayList<SongData> data = new ArrayList<>();
 
 		for(SongData dr: favorites.keySet()) {	// Makes sure to retrieve the favorited song with the same artist or name
-			if(a_t.equalsIgnoreCase(dr.getTitle()) || a_t.equalsIgnoreCase(dr.getAuthor())) {
+			if(a_t.equalsIgnoreCase(dr.getTitle())) {
 				data.add(dr);
 			}
 		}
@@ -341,6 +375,9 @@ public class LibraryModel{
 	}
 	
 	//Checks if a song is inside the Library
+	/*
+	 * @pre: compare != null
+	 */
 	private boolean checkSongList(Song compare) {
 		for (Song s : getSongs()) {
 			if(s.equals(compare)) {
@@ -351,6 +388,9 @@ public class LibraryModel{
 	}
 	
 	//checks if a album is inside the library
+	/*
+	 * @pre: compare != null
+	 */
 	private boolean checkAlbumList(Album compare) {
 		for(Album a : getAlbums()) {
 			if(a.equals(compare)) {

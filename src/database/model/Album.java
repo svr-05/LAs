@@ -1,4 +1,4 @@
-package database.store;
+package database.model;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public class Album {
 		if (o == this) return true;
 		
 		if (o.getClass()!= getClass()) return false;
-		
+		// now, check and compare the internal attributes of the Album instances
 		if (!(this.name.equals(((Album) o).name) && 
 				   this.artist.equals(((Album) o).artist) &&
 			       this.genre.equals(((Album) o).genre) && 

@@ -1,8 +1,11 @@
-package database.store;
+package database.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
+
+import database.model.Album;
+import database.model.Song;
 
 class TestSong {
 	Song laBachata = new Song("La Bachata", "Manuel Turizo", "2000");

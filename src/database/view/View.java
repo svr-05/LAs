@@ -3,7 +3,7 @@ package database.view;
 import java.util.Scanner;
 
 import database.model.LibraryModel;
-import database.model.MusicStore;
+import database.store.MusicStore;
 /*
  * The view has been AI generated, we used a drafted code as "sample" so we could give AI an idea
  * on how to shape the view. The lines with // at the end were manually added
@@ -141,7 +141,6 @@ public class View {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
                     libraryModel.makePlayList(playlistName);
-                    System.out.println("Playlist created successfully!");
                 }
                 case "8" -> {
                     System.out.print("Enter playlist name: ");
@@ -149,7 +148,38 @@ public class View {
                     System.out.print("Enter song title: ");
                     String songTitle = scanner.nextLine();
                     libraryModel.addSongToPlayList(playlistName, songTitle);
-                    System.out.println("Song added to playlist successfully!");
+                }
+                case "9" -> {
+                    System.out.print("Enter playlist name: ");
+                    String playlistName = scanner.nextLine();
+                    System.out.print("Enter song title: ");
+                    String songTitle = scanner.nextLine();
+                    libraryModel.removeSongFromPlayList(playlistName, songTitle);
+                }
+                case "10" -> {
+                    System.out.print("Enter song title: ");
+                    String songTitle = scanner.nextLine();
+                    libraryModel.addFavorite(songTitle);
+                }
+                case "11" -> {
+                    System.out.print("Enter song title: ");
+                    String songTitle = scanner.nextLine();
+                    System.out.print("Enter rating (1-5): ");
+                    int rating = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    libraryModel.rateSong(songTitle, rating);
+                }
+                case "12" -> {
+                    System.out.print("Enter category (Songs, Artists, Albums, Playlists, Favorites): ");
+                    String category = scanner.nextLine().toLowerCase();
+                    switch (category) {
+                        case "songs" -> libraryModel.getSongTitles().forEach(System.out::println);
+                        case "artists" -> libraryModel.getArtists().forEach(System.out::println);
+                        case "albums" -> libraryModel.getAlbumList().forEach(System.out::println);
+                        case "playlists" -> libraryModel.getPlayList().forEach(System.out::println);
+                        case "favorites" -> libraryModel.getFavorites().forEach(System.out::println);
+                        default -> System.out.println("Invalid category. Please enter one of: Songs, Artists, Albums, Playlists, Favorites.");
+                    }
                 }
                 case "13" -> {
                     System.out.print("Enter playlist name: ");

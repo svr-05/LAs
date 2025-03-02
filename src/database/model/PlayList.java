@@ -1,4 +1,4 @@
-package database.store;
+package database.model;
 
 import java.util.ArrayList;
 

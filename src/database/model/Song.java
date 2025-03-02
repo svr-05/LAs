@@ -1,4 +1,4 @@
-package database.store;
+package database.model;
 
 public class Song {
 	private final String title,

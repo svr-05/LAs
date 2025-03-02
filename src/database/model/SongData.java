@@ -1,7 +1,5 @@
 package database.model;
 
-import database.store.Song;
-
 public class SongData {
 	// instance variables
 	public enum ratingScale { 
@@ -19,7 +17,7 @@ public class SongData {
 		} 
 		
 		@Override
-		public String toString() {
+		public String toString() { // the toString is the "bridge" between the enums and the stars
 			return this.r;
 		}
 	};
@@ -66,6 +64,10 @@ public class SongData {
 	public void changeFavorite() { this.isFavorite = !this.isFavorite; }
 	
 	public void rate(int r) {
+		if (r < 1 || r > 5) {
+			System.out.println("Please Enter an integer between 1 and 5!");
+			return;
+		}
 		switch (r) {
 			case 1:
 				this.rating = ratingScale.ONE;
@@ -84,6 +86,7 @@ public class SongData {
 				this.isFavorite = true;
 				break;
 		}
+		System.out.println("Rating saved!");
 	}
 	
 	@Override

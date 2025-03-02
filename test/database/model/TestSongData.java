@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import database.store.Album;
-import database.store.Song;
-
 class TestSongData {
 	
 	SongData HCV = new SongData("Hola Como Vas", "Eladio Carrion", "Sauce Boyz 2");
@@ -61,6 +58,9 @@ class TestSongData {
 		assertFalse(song.favoriteStatus());
 		
 		otherSong.rate(5);
+		assertTrue(otherSong.favoriteStatus());
+		
+		otherSong.rate(6);
 		assertTrue(otherSong.favoriteStatus());
 	}
 	
