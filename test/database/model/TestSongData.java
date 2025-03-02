@@ -24,22 +24,27 @@ class TestSongData {
 	
 	@Test
 	void testGetAlbum() {
-		assertEquals("Sauce Boyz 2", HCV.getAlbum(), SB2.getName());
+		assertEquals("Sauce Boyz 2", HCV.getAlbum());
+		assertEquals("Sauce Boyz 2", SB2.getName());
 	}
 	
 	@Test
 	void testSetRating() {
 		SongData song = new SongData("Space Cadet", "Metro Boomin", "NOT ALL HEROES WEAR CAPES (Deluxe)");
-		assertNull(song.getRating()); // No default rating
+		
+		assertEquals(SongData.ratingScale.NONE, song.getRating());
 		
 		song.rate(1);
-		assertEquals("★", song.getRating());
+		assertEquals(SongData.ratingScale.ONE, song.getRating());
 		
 		song.rate(2);
-		assertEquals("★ ★", song.getRating());
+		assertEquals(SongData.ratingScale.TWO, song.getRating());
+
+		song.rate(3);
+		assertEquals(SongData.ratingScale.THREE, song.getRating());
 		
-		song.rate(6);	
-		assertNull(song.getRating());
+		song.rate(4);
+		assertEquals(SongData.ratingScale.FOUR, song.getRating());
 		
 	}
 	
@@ -70,7 +75,13 @@ class TestSongData {
 	@Test
 	void testToString() {
 		String songStr = HCV.toString();
-		assertEquals(songStr, "Song title: Hola Como Vas, Author: Eladio Carrion, Album: Sauce Boyz 2");
+		assertEquals(songStr, "Song title: Hola Como Vas, Author: Eladio Carrion, Album: Sauce Boyz 2, Rating: Not Rated Yet, Not Favorite");
+		
+		SongData HC = new SongData("Hola Como Vas", "Eladio Carrion", "Sauce Boyz 2");
+		HC.rate(5);
+		String HCStr = HC.toString();
+		assertEquals(HCStr, "Song title: Hola Como Vas, Author: Eladio Carrion, Album: Sauce Boyz 2, Rating: ★ ★ ★ ★ ★, Favorite");
+		
 	}
 	
 	

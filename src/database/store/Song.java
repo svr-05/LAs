@@ -1,11 +1,14 @@
 package database.store;
 
 public class Song {
-	private String title,
-	               author,
-	               album;
+	private final String title,
+	                     author,
+	                     album;
 	
 	// constructor
+	/* 
+	 * @pre title != null && author != null && album != null 
+	 */
 	public Song(String title, String author, String album) {
 		this.title = title;
 		this.author = author;
@@ -13,7 +16,7 @@ public class Song {
 	}
 	
 	// copy constructor
-	public Song(Song song) { // Need to change this to take in SongData
+	public Song(Song song) {
 		this(song.title, song.author, song.album);
 	}
 	
@@ -33,9 +36,9 @@ public class Song {
 		else if (o.getClass() != getClass()) return false;
 		
 		else {
-			return this.title == ((Song) o).title &&  
-		           this.author == ((Song) o).author && 
-		           this.album == ((Song) o).album; 
+			return this.title.equals(((Song) o).title) &&  
+		           this.author.equals(((Song) o).author) && 
+		           this.album.equals(((Song) o).album); 
 		}
 	}
 	

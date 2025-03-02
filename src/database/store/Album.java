@@ -11,12 +11,19 @@ public class Album {
 	private ArrayList<Song> songs;
 
 	// constructor
+	/*
+	 * @pre name != null && artist != null && genre != null && year > 1971
+	 */
 	public Album(String name, String artist, String genre, int year) {
 		this.name = name;
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
 		this.songs = new ArrayList<Song>();
+	}
+	
+	public Album(Album album) {
+		this(album.name, album.artist, album.genre, album.year);
 	}
 	
 	// getters
@@ -45,9 +52,9 @@ public class Album {
 		
 		if (o.getClass()!= getClass()) return false;
 		
-		if (!(this.name == ((Album) o).name && 
-				   this.artist == ((Album) o).artist &&
-			       this.genre == ((Album) o).genre && 
+		if (!(this.name.equals(((Album) o).name) && 
+				   this.artist.equals(((Album) o).artist) &&
+			       this.genre.equals(((Album) o).genre) && 
 			       this.year == ((Album) o).year && 
 			       this.songs.size() == ((Album) o).songs.size())) return false;
 		

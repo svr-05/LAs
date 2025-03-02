@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
-import database.store.Album;
-import database.store.Song;
-
 class TestSong {
 	Song laBachata = new Song("La Bachata", "Manuel Turizo", "2000");
 	Song copy      = new Song(laBachata);

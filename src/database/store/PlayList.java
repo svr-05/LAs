@@ -8,6 +8,9 @@ public class PlayList {
 	private ArrayList<Song> body;
 	
 	//Constructors
+	/*
+	 * @pre: title != null
+	 */
 	public PlayList(String title) {
 		this.title = title;
 		this.body = new ArrayList<Song>();
@@ -24,7 +27,7 @@ public class PlayList {
 	
 	//Methods
 	public void addSong(Song s) {
-		body.add(new Song(s));
+		body.add(s); // no need for a copy
 	}
 	
 	public void remove(Song s) {
