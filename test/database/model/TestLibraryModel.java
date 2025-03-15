@@ -103,7 +103,7 @@ class TestLibraryModel {
 		LibraryModel lB = new LibraryModel();
 		lB.addAlbum("19");
 		
-		lB.searchAlbumbyTitleAuthor("19", "Adele");
+		lB.searchAlbumbyTitleAuthor("Adele");
 	}
 	
 	@Test
@@ -111,7 +111,7 @@ class TestLibraryModel {
 		LibraryModel lB = new LibraryModel();
 		lB.addAlbum("19");
 		
-		lB.searchSongByTitleArtist("Daydreamer", "Adele");
+		lB.searchSongByTitleArtist("Adele");
 	}
 	
 	@Test

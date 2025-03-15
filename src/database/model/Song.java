@@ -1,9 +1,9 @@
 package database.model;
 
 public class Song {
-	private final String title,
-	                     author,
-	                     album;
+	private String title,
+	               author,
+	               album;
 	
 	// constructor
 	/* 

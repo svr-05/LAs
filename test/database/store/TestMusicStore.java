@@ -65,8 +65,8 @@ class TestMusicStore {
 		MusicStore mS = new MusicStore();
 		mS.parseAlbums();
 		
-		mS.searchSongByTitleArtist("a", "b");
-		mS.searchSongByTitleArtist("Daydreamer", "Adele");
+		mS.searchSongByTitleArtist("b");
+		mS.searchSongByTitleArtist("Adele");
 	}
 	
 	@Test 
@@ -74,8 +74,8 @@ class TestMusicStore {
 		MusicStore mS = new MusicStore();
 		mS.parseAlbums();
 		
-		mS.searchAlbumbyTitleAuthor("a", "b");
-		mS.searchAlbumbyTitleAuthor("Daydreamer", "Adele");
+		mS.searchAlbumbyTitleAuthor("b");
+		mS.searchAlbumbyTitleAuthor("Adele");
 	}
 
 

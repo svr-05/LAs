@@ -57,11 +57,9 @@ public class View {
                     musicStore.searchSongbyString(title);
                 }
                 case "2" -> {
-                    System.out.print("Enter song title: ");
-                    String title = scanner.nextLine();
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
-                    musicStore.searchSongByTitleArtist(title, artist);
+                    musicStore.searchSongByTitleArtist(artist);
                 }
                 case "3" -> {
                     System.out.print("Enter album title: ");
@@ -69,11 +67,9 @@ public class View {
                     musicStore.searchAlbumbyString(title);
                 }
                 case "4" -> {
-                    System.out.print("Enter album title: ");
-                    String title = scanner.nextLine();
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
-                    musicStore.searchAlbumbyTitleAuthor(title, artist);
+                    musicStore.searchAlbumbyTitleAuthor(artist);
                 }
                 case "b" -> System.out.println("Returning to main menu...");
                 default -> System.out.println("Invalid input. Please try again.");
@@ -119,11 +115,9 @@ public class View {
                     libraryModel.searchSongbyString(title);
                 }
                 case "4" -> {
-                    System.out.print("Enter song title: ");
-                    String title = scanner.nextLine();
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
-                    libraryModel.searchSongByTitleArtist(title, artist);
+                    libraryModel.searchSongByTitleArtist(artist);
                 }
                 case "5" -> {
                     System.out.print("Enter album title: ");
@@ -131,11 +125,9 @@ public class View {
                     libraryModel.searchAlbumbyString(title);
                 }
                 case "6" -> {
-                    System.out.print("Enter album title: ");
-                    String title = scanner.nextLine();
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
-                    libraryModel.searchAlbumbyTitleAuthor(title, artist);
+                    libraryModel.searchAlbumbyTitleAuthor(artist);
                 }
                 case "7" -> {
                     System.out.print("Enter playlist name: ");
@@ -186,8 +178,8 @@ public class View {
                     String playlistName = scanner.nextLine();
                     libraryModel.searchPlayListName(playlistName);
                 }
-                case "b" -> System.out.println("Returning to main menu...");
-                default -> System.out.println("Invalid input. Please try again.");
+                case "b" -> System.out.println("Returning to main menu...\n");
+                default -> System.out.println("Invalid input. Please try again.\n");
             }
         } while (!choice.equals("b"));
     }

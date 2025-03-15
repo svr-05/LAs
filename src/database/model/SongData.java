@@ -61,7 +61,7 @@ public class SongData {
 	public boolean favoriteStatus() { return this.isFavorite; }
 	
 	// setters
-	public void changeFavorite() { this.isFavorite = !this.isFavorite; }
+	public void changeFavorite() { this.isFavorite = true; }
 	
 	public void rate(int r) {
 		if (r < 1 || r > 5) {

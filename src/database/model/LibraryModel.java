@@ -6,21 +6,11 @@ import java.util.HashMap;
 import database.store.MusicStore;
 
 public class LibraryModel{
-	public static void main(String[] args) {
-		LibraryModel lB = new LibraryModel();
-		lB.makePlayList("S");
-		lB.addSong("DayDreamer");
-		
-		lB.addSongToPlayList("S", "DayDreamer");
-		System.out.println(lB.getUserList().size());
-		lB.removeSongFromPlayList("S", "DayDreamer");
-		System.out.println(lB.getUserList().size());
-	}
 
 	private ArrayList<PlayList> userList; 
 	private ArrayList<Song> songLibrary; // Holds in a Song
 	private ArrayList<Album> albumLibrary;
-	private HashMap<SongData, Boolean> favorites; // Holds the songs that are favorited
+	private ArrayList<SongData> favorites; // Holds the songs that are favorited
 	private MusicStore musicStore;
 	
 	//Constructors
@@ -28,7 +18,7 @@ public class LibraryModel{
 		this.userList = new ArrayList<>();
 		this.songLibrary = new ArrayList<>();
 		this.albumLibrary = new ArrayList<>();
-		this.favorites = new HashMap<>();
+		this.favorites = new ArrayList<>();
 		this.musicStore = new MusicStore();
 		musicStore.parseAlbums(); // That way we load all of the music store here!
 	}
@@ -46,9 +36,9 @@ public class LibraryModel{
 	
 	public void addSong(String Stitle) {
 	    boolean songFound = false;
-	    for (SongData sD : musicStore.getSongData()) { // retrieve all the songs in the library
+	    for (SongData sD : musicStore.getSongData()) { // check all the songs in the library
 	        if (Stitle.equalsIgnoreCase(sD.getTitle())) {  // verify there is a SongData object that matches the title of the song
-	            Song S = sD.getSongObject(); // retuerns a copy of the SongObject
+	            Song S = sD.getSongObject(); // returns a copy of the SongObject
 	            if (musicStore.checkStoreSong(S.getTitle())) {
 	                if (!checkSongList(S)) { // add the song if it's not yet in the library
 	                    songLibrary.add(S);
@@ -91,7 +81,7 @@ public class LibraryModel{
 	    for (SongData d : getDataInLibrary()) {
 	        if (d.getTitle().equalsIgnoreCase(songTitle)) {
 	            d.changeFavorite();
-	            favorites.put(d, d.favoriteStatus());
+	            favorites.add(d);
 	            System.out.println("Done!");
 	            return;
 	        }
@@ -211,7 +201,7 @@ public class LibraryModel{
 	//Returns a List of all songs on Favorites
 	public ArrayList<String> getFavorites(){
 		ArrayList<String> result = new ArrayList<>();
-		for(SongData d: favorites.keySet()) {
+		for(SongData d: favorites) {
 			result.add(d.toString());
 		}
 		return result;
@@ -263,10 +253,10 @@ public class LibraryModel{
 	/*
 	 * @pre: title != null && artist != null
 	 */
-	public void searchAlbumbyTitleAuthor(String title, String artist){
+	public void searchAlbumbyTitleAuthor(String artist){
 		ArrayList<Album> albumsByString = new ArrayList<>();
 		for(Album a1: albumLibrary) {	// Makes sure to retrieve the album that does match the artist and title
-			if(title.equalsIgnoreCase(a1.getName()) && artist.equalsIgnoreCase(a1.getArtist())) { 
+			if(artist.equalsIgnoreCase(a1.getArtist())) { 
 				albumsByString.add(a1);
 			}
 		}
@@ -280,10 +270,10 @@ public class LibraryModel{
 	/*
 	 * @pre: title != null && author != null
 	 */
-	public void searchSongByTitleArtist(String title, String author) {
+	public void searchSongByTitleArtist(String author) {
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Song s: songLibrary) {	// Makes sure to retrieve the song that does match the artist and title
-			if(title.equalsIgnoreCase(s.getTitle()) && author.equalsIgnoreCase(s.getAuthor())) { 
+			if(author.equalsIgnoreCase(s.getAuthor())) { 
 				songsByString.add(s); 
 			}
 			
@@ -325,7 +315,7 @@ public class LibraryModel{
 	public void searchFavorites(String a_t) {
 		ArrayList<SongData> data = new ArrayList<>();
 
-		for(SongData dr: favorites.keySet()) {	// Makes sure to retrieve the favorited song with the same artist or name
+		for(SongData dr: favorites) {	// Makes sure to retrieve the favorited song with the same artist or name
 			if(a_t.equalsIgnoreCase(dr.getTitle())) {
 				data.add(dr);
 			}
@@ -334,7 +324,7 @@ public class LibraryModel{
 			System.out.println("You don't have any favorites...LISTEN TO MORE MUSIC!!");
 		}
 		else {
-			for(SongData p: favorites.keySet()) {
+			for(SongData p: favorites) {
 				System.out.print(p.getSongObject().toString() + ", Rating: " + p.getRating());
 			}
 		}

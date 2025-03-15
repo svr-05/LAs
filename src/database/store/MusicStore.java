@@ -115,11 +115,11 @@ public class MusicStore {
 	/*
 	 * @pre: sTitle != null && author != null
 	 */
-	public void searchSongByTitleArtist(String title, String author) {
+	public void searchSongByTitleArtist(String author) {
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Album a: store.values()) {
 			for(Song s1: a.getSongs()) {
-				if(title.equalsIgnoreCase(s1.getTitle()) && author.equalsIgnoreCase(s1.getAuthor())) { 
+				if(author.equalsIgnoreCase(s1.getAuthor())) { 
 					songsByString.add(s1); 
 				}
 			}
@@ -152,10 +152,10 @@ public class MusicStore {
 	/*
 	 * @pre: title != null && artist != null
 	 */
-	public void searchAlbumbyTitleAuthor(String title, String artist){
+	public void searchAlbumbyTitleAuthor(String artist){
 		ArrayList<Album> albumsByString = new ArrayList<>();
 		for(Album a1: store.values()) {	// Makes sure to retrieve the album that does match the artist and title
-			if(title.equalsIgnoreCase(a1.getName()) && artist.equalsIgnoreCase(a1.getArtist())) { albumsByString.add(a1); }
+			if(artist.equalsIgnoreCase(a1.getArtist())) { albumsByString.add(a1); }
 		}
 		if(albumsByString.isEmpty()) {
 			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
