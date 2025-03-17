@@ -14,20 +14,14 @@ import java.util.ArrayList;
 public class MusicStore {
 	
 	private HashMap<String, Album> store;
-	private ArrayList<SongData> storesongs;
+	private ArrayList<SongData> storeSongs;
 	
 	public MusicStore() {
 		this.store = new HashMap<String, Album>();
-		this.storesongs = new ArrayList<>();
+		this.storeSongs = new ArrayList<>();
 	}
-	// return an unmodifiable list of SongData objects
-	public ArrayList<SongData> getSongData() {
-	    ArrayList<SongData> copy = new ArrayList<>();
-	    for (SongData song : storesongs) {
-	        copy.add(new SongData(song));
-	    }
-	    return copy;
-	}
+	// return a list with escaping references to SongData objects to help with rating
+	public ArrayList<SongData> getSongData() { return storeSongs; }
 	
 	public HashMap<String, Album> getStore() { return new HashMap<>(this.store); }
 	
@@ -60,7 +54,7 @@ public class MusicStore {
 			while ((tracklistSong = br.readLine()) != null) {
 				SongData songData = new SongData(tracklistSong, info[1], info[0]);
 				Song song = new Song(tracklistSong, info[1], info[0]);
-				storesongs.add(songData);
+				storeSongs.add(songData);
 				album.addSong(song); // add all the songs in the tracklist to the array of songs
 			} store.put(info[0], album); // { "Album title": Album }
 		} catch (IOException e) {
@@ -74,7 +68,7 @@ public class MusicStore {
 	 * @pre: sTitle != null
 	 */
 	public boolean checkStoreSong(String sTitle){ // Searches for a Song in the array of songs
-		for(SongData s: storesongs) {
+		for(SongData s: storeSongs) {
 			if(s.getTitle().equalsIgnoreCase(sTitle)) return true;
 		}
 		return false;

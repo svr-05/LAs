@@ -78,8 +78,9 @@ class TestLibraryModel {
 	void testGetArtists() {
 		LibraryModel lB = new LibraryModel();
 		lB.addSong("DayDreamer");
+		lB.addSong("Best for Last");
 		
-		assertEquals("Adele", lB.getArtists().get(0));
+		assertEquals(1, lB.getArtists().size());
 	}
 	
 	@Test

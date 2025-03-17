@@ -52,10 +52,8 @@ class TestSongData {
 		SongData otherSong = new SongData(otherS);
 		
 		assertFalse(song.favoriteStatus());
-		song.changeFavorite();
+		song.setFavorite();
 		assertTrue(song.favoriteStatus());
-		song.changeFavorite();
-		assertFalse(song.favoriteStatus());
 		
 		otherSong.rate(5);
 		assertTrue(otherSong.favoriteStatus());

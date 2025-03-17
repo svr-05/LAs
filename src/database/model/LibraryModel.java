@@ -1,7 +1,7 @@
 package database.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 
 import database.store.MusicStore;
 
@@ -80,7 +80,7 @@ public class LibraryModel{
 	public void addFavorite(String songTitle) {
 	    for (SongData d : getDataInLibrary()) {
 	        if (d.getTitle().equalsIgnoreCase(songTitle)) {
-	            d.changeFavorite();
+	            d.setFavorite();
 	            favorites.add(d);
 	            System.out.println("Done!");
 	            return;
@@ -107,7 +107,7 @@ public class LibraryModel{
 		for(SongData d : getDataInLibrary()) { // check in all of the SongData objects in the array
 			if(d.getTitle().equalsIgnoreCase(sTitle)) {
 				d.rate(r);
-				if(r == 5) {
+				if(d.favoriteStatus()) {
 					addFavorite(d.getTitle());
 				}
 				found = true;
@@ -164,6 +164,11 @@ public class LibraryModel{
 	//Methods for GetLists/Searching
 	//Returns a list of Song names from the library
 	public ArrayList<String> getSongTitles(){
+		if (songLibrary.isEmpty()) {
+			System.out.println("You haven't added any songs yet -_-"); 
+			return new ArrayList<>();
+		}
+		System.out.println("🎵");
 		ArrayList<String> result = new ArrayList<>();
 		for(Song s : songLibrary) {
 			result.add(s.getTitle());
@@ -171,17 +176,27 @@ public class LibraryModel{
 		return result;
 	}
 	
-	//Returns a list of Artists from the library
-	public ArrayList<String> getArtists(){
-		ArrayList<String> result = new ArrayList<>();
-		for(Song s : songLibrary) {
+	//Returns a set of Artists from the library
+	public HashSet<String> getArtists(){ // as opposed to the other "serchers" for the
+		if (songLibrary.isEmpty()) {     // library, this one uses a set to avoid repetition!
+			System.out.println("Add a song to add an artist!");
+			return new HashSet<>();
+		}
+		System.out.println("🎤");
+		HashSet<String> result = new HashSet<>(); 
+		for(Song s : songLibrary) {                  
 			result.add(s.getAuthor());
 		}
 		return result;
 	}
 	
 	//Returns a list of Albums from the Library
-	public ArrayList<String> getAlbumList(){
+	public ArrayList<String> getAlbumList() {
+		if (albumLibrary.isEmpty()) {
+			System.out.println("You haven't added any albums");
+			return new ArrayList<>();
+		}
+		System.out.println("💿");
 		ArrayList<String> result = new ArrayList<>();
 		for(Album a : albumLibrary) {
 			result.add(a.getName());
@@ -191,6 +206,11 @@ public class LibraryModel{
 	
 	//Returns a list of strings with the playlist titles from the Library list
 	public ArrayList<String> getPlayList(){
+		if (userList.isEmpty()) {
+			System.out.println("Create a playlist first");
+			return new ArrayList<>();
+		}
+		System.out.println("🎧");
 		ArrayList<String> result = new ArrayList<>();
 		for(PlayList p : userList) {
 			result.add(p.getTitle());
@@ -199,8 +219,13 @@ public class LibraryModel{
 	}
 	
 	//Returns a List of all songs on Favorites
-	public ArrayList<String> getFavorites(){
-		ArrayList<String> result = new ArrayList<>();
+	public HashSet<String> getFavorites(){
+		if (favorites.isEmpty()) {
+			System.out.println("You don't have any favorite songs yet 🙃");
+			return new HashSet<>();
+		}
+		System.out.println("🖤");
+		HashSet<String> result = new HashSet<>();
 		for(SongData d: favorites) {
 			result.add(d.toString());
 		}
@@ -331,14 +356,6 @@ public class LibraryModel{
 
 	}
 	
-	
-	// Helper Methods that can retrieve
-	// Retrieves the list of Songs from Library
-	// Song is immutable! No need for deeper copy
-	public ArrayList<Song> getSongs(){
-		return new ArrayList<>(songLibrary);
-	}
-	
 	// Retrieves the list of Albums from library
 	// Albums are mutable, thus, a deeper cop is needed
 	public ArrayList<Album> getAlbums(){
@@ -369,7 +386,7 @@ public class LibraryModel{
 	 * @pre: compare != null
 	 */
 	private boolean checkSongList(Song compare) {
-		for (Song s : getSongs()) {
+		for (Song s : songLibrary) {
 			if(s.equals(compare)) {
 				return true;
 			}

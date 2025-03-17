@@ -158,19 +158,28 @@ public class View {
                     String songTitle = scanner.nextLine();
                     System.out.print("Enter rating (1-5): ");
                     int rating = scanner.nextInt();
-                    scanner.nextLine(); // Consume newline
+                    scanner.nextLine();
                     libraryModel.rateSong(songTitle, rating);
                 }
                 case "12" -> {
                     System.out.print("Enter category (Songs, Artists, Albums, Playlists, Favorites): ");
                     String category = scanner.nextLine().toLowerCase();
-                    switch (category) {
-                        case "songs" -> libraryModel.getSongTitles().forEach(System.out::println);
-                        case "artists" -> libraryModel.getArtists().forEach(System.out::println);
-                        case "albums" -> libraryModel.getAlbumList().forEach(System.out::println);
-                        case "playlists" -> libraryModel.getPlayList().forEach(System.out::println);
-                        case "favorites" -> libraryModel.getFavorites().forEach(System.out::println);
-                        default -> System.out.println("Invalid category. Please enter one of: Songs, Artists, Albums, Playlists, Favorites.");
+                    if (category.contains("song") || category.contains("somg")) {
+                    	libraryModel.getSongTitles().forEach(System.out::println);
+                    }
+                    else if (category.contains("artis")) {
+                    	libraryModel.getArtists().forEach(System.out::println);
+                    }
+                    else if (category.contains("albu")) {
+                    	 libraryModel.getAlbumList().forEach(System.out::println);
+                    }
+                    else if (category.contains("playlis")) {
+                    	libraryModel.getPlayList().forEach(System.out::println);
+                    }
+                    else if (category.contains("fav")) {
+                    	libraryModel.getFavorites().forEach(System.out::println);
+                    } else {
+                    	System.out.println("Invalid category. Please enter one of: Songs, Artists, Albums, Playlists, Favorites.");
                     }
                 }
                 case "13" -> {
