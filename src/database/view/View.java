@@ -161,24 +161,25 @@ public class View {
                     scanner.nextLine();
                     libraryModel.rateSong(songTitle, rating);
                 }
+                // to make it more user friendly, there's added flexibility to account for some typos the user might have
                 case "12" -> {
                     System.out.print("Enter category (Songs, Artists, Albums, Playlists, Favorites): ");
                     String category = scanner.nextLine().toLowerCase();
-                    if (category.contains("song") || category.contains("somg")) {
+                    if (category.contains("song") || category.contains("somg")) { //
                     	libraryModel.getSongTitles().forEach(System.out::println);
                     }
-                    else if (category.contains("artis")) {
+                    else if (category.contains("arti")) { //
                     	libraryModel.getArtists().forEach(System.out::println);
                     }
-                    else if (category.contains("albu")) {
+                    else if (category.contains("albu")) { //
                     	 libraryModel.getAlbumList().forEach(System.out::println);
                     }
-                    else if (category.contains("playlis")) {
+                    else if (category.contains("playlis")) { //
                     	libraryModel.getPlayList().forEach(System.out::println);
                     }
-                    else if (category.contains("fav")) {
+                    else if (category.contains("fav")) { //
                     	libraryModel.getFavorites().forEach(System.out::println);
-                    } else {
+                    } else { //
                     	System.out.println("Invalid category. Please enter one of: Songs, Artists, Albums, Playlists, Favorites.");
                     }
                 }
