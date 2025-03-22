@@ -1,11 +1,11 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 public class PlayList {
 	
 	private String title;
-	private ArrayList<Song> body;
+	private HashSet<Song> body;
 	
 	//Constructors
 	/*
@@ -13,7 +13,7 @@ public class PlayList {
 	 */
 	public PlayList(String title) {
 		this.title = title;
-		this.body = new ArrayList<Song>();
+		this.body = new HashSet<Song>();
 	}
 
 	//Getters
@@ -21,8 +21,8 @@ public class PlayList {
 		return this.title;
 	}
 
-	public ArrayList<Song> getBody() {
-		return new ArrayList<>(body);
+	public HashSet<Song> getBody() {
+		return new HashSet<>(body);
 	}
 	
 	//Methods
