@@ -1,4 +1,4 @@
-package LA1;
+package model;
 
 import java.util.ArrayList;
 
@@ -8,14 +8,12 @@ public class PlayList {
 	private ArrayList<Song> body;
 	
 	//Constructors
+	/*
+	 * @pre: title != null
+	 */
 	public PlayList(String title) {
 		this.title = title;
 		this.body = new ArrayList<Song>();
-	}
-	
-	public PlayList(PlayList p) {
-		this.title = p.getTitle();
-		this.body = p.getBody();
 	}
 
 	//Getters
@@ -29,7 +27,7 @@ public class PlayList {
 	
 	//Methods
 	public void addSong(Song s) {
-		body.add(new Song(s));
+		body.add(s); // no need for a copy
 	}
 	
 	public void remove(Song s) {
@@ -37,13 +35,15 @@ public class PlayList {
 	}
 	
 	//StringMethod
+	@Override
 	public String toString(){
-		String result = title + ": ";
+		String result = "";
+		result += this.title + ": ";
 		for(Song s : body) {
-			result = "\n-" + s.toString();
+			result += "\n-" + s.toString();
 		}
 		result += "\n";
 		return result;
 	}
-
+	
 }
