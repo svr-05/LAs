@@ -1,4 +1,4 @@
-package LA1;
+package model;
 
 import java.util.ArrayList;
 
@@ -11,12 +11,19 @@ public class Album {
 	private ArrayList<Song> songs;
 
 	// constructor
+	/*
+	 * @pre name != null && artist != null && genre != null && year > 1971
+	 */
 	public Album(String name, String artist, String genre, int year) {
 		this.name = name;
 		this.artist = artist;
 		this.genre = genre;
 		this.year = year;
 		this.songs = new ArrayList<Song>();
+	}
+	
+	public Album(Album album) {
+		this(album.name, album.artist, album.genre, album.year);
 	}
 	
 	// getters
@@ -37,6 +44,31 @@ public class Album {
 		this.songs.add(new Song(s));
 	}
 	
+	@Override
+	public boolean equals(Object o){
+		if (o == null) return false;
+		
+		if (o == this) return true;
+		
+		if (o.getClass()!= getClass()) return false;
+		// now, check and compare the internal attributes of the Album instances
+		if (!(this.name.equals(((Album) o).name) && 
+				   this.artist.equals(((Album) o).artist) &&
+			       this.genre.equals(((Album) o).genre) && 
+			       this.year == ((Album) o).year && 
+			       this.songs.size() == ((Album) o).songs.size())) return false;
+		
+		for (int i = 0; i < this.songs.size(); i++) {
+			if (!this.songs.get(i).equals(((Album) o).songs.get(i))) return false;
+		}
+
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return name.hashCode() + artist.hashCode() + genre.hashCode() + year + songs.hashCode();
+	}
 
 	@Override
 	public String toString() {
@@ -45,16 +77,12 @@ public class Album {
 		sb.append(", Author: " + this.artist);
 		sb.append(", Genre: " + this.genre);
 		sb.append(", Release year: " + this.year);
-		sb.append("\nTracklist:\n");
-		String songs = "";
+		String songs = "Tracklist:";
 		for (Song s : this.songs) {
-			songs += s.getTitle();
-			songs += "\n";
+			songs += "\n- " + s.getTitle();
 		}
-		sb.append(songs.trim());
+		sb.append("\n" + songs.trim());
 		return sb.toString();
 	}
-	
-	
 
 }
