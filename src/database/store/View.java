@@ -3,7 +3,7 @@ package view;
 import java.util.Scanner;
 
 import model.LibraryModel;
-import store.MusicStore;
+import model.store.MusicStore;
 /*
  * The view has been AI generated, we used a drafted code as "sample" so we could give AI an idea
  * on how to shape the view. The lines with // at the end were manually added
@@ -94,9 +94,12 @@ public class View {
             System.out.println("11 - Rate a Song"); //
             System.out.println("12 - View Lists (Songs, Artists, Albums, Playlists, Favorites)"); //
             System.out.println("13 - Search for a Playlist by Name"); //
+            System.out.println("14 - Play a Song"); //
             System.out.println("B - Back");
             System.out.print("Select an option: "); //
-            choice = scanner.nextLine().toLowerCase();
+            do {
+            	choice = scanner.nextLine().toLowerCase();
+            } while(choice.isEmpty());
             
             switch (choice) {
                 case "1" -> {
@@ -186,6 +189,11 @@ public class View {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
                     libraryModel.searchPlayListName(playlistName);
+                }
+                case "14" -> {
+                    System.out.print("Enter song title: ");
+                    String play = scanner.nextLine().toLowerCase();
+                    libraryModel.playSong(play);
                 }
                 case "b" -> System.out.println("Returning to main menu...\n");
                 default -> System.out.println("Invalid input. Please try again.\n");
