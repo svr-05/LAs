@@ -1,0 +1,41 @@
+package model;
+
+import java.util.ArrayList;
+
+public class QueList {
+	private ArrayList<Song> list;
+	
+	//Constructors
+	public QueList() {
+		this.list = new ArrayList<>();
+	}
+	
+	//Getters
+	public ArrayList<Song> getQueue(){
+		return new ArrayList<Song>(this.list);
+	}
+	
+	//Add to the Queue
+	public void addQue(Song s) {
+		if(list.size() < 10) {
+			list.add(0, s);
+		} else {
+			list.add(0, s);
+			removeQue();
+		}
+	}
+	
+	@Override
+	public String toString() {
+		String result = "";
+		for(int i = (list.size() - 1 ); i > 0; i--) {
+			result += list.get(i);
+		}
+		return result;
+	}
+	
+	// HelperRemove from the Que
+	private void removeQue() {
+		list.remove(list.size() - 1);
+	}
+}
