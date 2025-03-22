@@ -2,8 +2,9 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import store.MusicStore;
+import java.util.Scanner;
+import model.QueList;
+import model.store.MusicStore;
 
 public class LibraryModel{
 
@@ -11,6 +12,7 @@ public class LibraryModel{
 	private ArrayList<Song> songLibrary; // Holds in a Song
 	private ArrayList<Album> albumLibrary;
 	private ArrayList<SongData> favorites; // Holds the songs that are favorited
+	private QueList queList;
 	private MusicStore musicStore;
 	
 	//Constructors
@@ -19,6 +21,7 @@ public class LibraryModel{
 		this.songLibrary = new ArrayList<>();
 		this.albumLibrary = new ArrayList<>();
 		this.favorites = new ArrayList<>();
+		this.queList = new QueList();
 		this.musicStore = new MusicStore();
 		musicStore.parseAlbums(); // That way we load all of the music store here!
 	}
@@ -365,7 +368,7 @@ public class LibraryModel{
 	
 	// Retrieves the list of Albums from library
 	// Albums are mutable, thus, a deeper cop is needed
-	public ArrayList<Album> getAlbums(){
+	public ArrayList<Album> getAlbums(){ // LA1
 		ArrayList<Album> result = new ArrayList<>();
 		for(Album album : albumLibrary) {
 			Album albumCopy = new Album(album);
@@ -376,6 +379,54 @@ public class LibraryModel{
 		}
 		return result;
 	}
+///////////////////////////////////////////////////////////////////////////////////////////////	
+	/* 
+	 * @pre sT != null
+	 */
+	public void playSong(String sT) {
+		/*
+		 * Method that simulates playing a song based off the Song title (sT).
+		 * It also checks if multiple songs of the same title exist, and if so prompts the user to pick an artist
+		 * */
+	    boolean songFound = false;
+	    ArrayList<String> artists = new ArrayList<>();
+	    for( Song s : getSongLibrary()) {
+	    	if(s.getTitle().toLowerCase().equals(sT)) {
+	    		artists.add(s.getAuthor());
+	    		songFound = true;
+	    	}
+	    }
+	    if(artists.size() > 1) {
+	    	@SuppressWarnings("resource")
+			Scanner s = new Scanner(System.in);
+	    	System.out.println("There are multiple songs with that title, please pick an author from: ");
+	    	for(int i = 0; i < artists.size(); i++) { System.out.println("-" + artists.get(i)); }
+	    	System.out.print("Pick here: ");
+	    	String userAuthor = s.nextLine().toLowerCase().trim();
+	    	for(Song so : getSongLibrary()) {
+	    		//System.out.println(so.getAuthor());
+	    		if(so.getAuthor().toLowerCase().equals(userAuthor) && so.getTitle().toLowerCase().equals(sT)) { 
+	    			System.out.println("Playing " + so.getTitle() + " By " + so.getAuthor() + ".....Enjoy!");
+	    			queList.addQue(so);
+	    			break;
+	    		}
+	    	}
+	    } else {
+	    	for(Song sg : getSongLibrary()) {
+	    		if(sg.getTitle().toLowerCase().equals(sT)) { System.out.println("Playing " + sg.getTitle() + ".....Enjoy!"); }
+	    	}
+	    }
+	    if (songFound == false) { System.out.println("Song not found in the Music Library."); }
+	}
+	
+	/*public void getRecentlyPlayed(User u){
+		
+	}*/
+	
+	/*public void get*/
+	
+	
+///////////////////////////////////////////////////////////////////////////////////////////////	
 	
 	//Retrieve the List of SONG DATA
 	private ArrayList<SongData> getDataInLibrary(){
