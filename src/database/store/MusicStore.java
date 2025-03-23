@@ -37,7 +37,6 @@ public class MusicStore {
 					parseAlbumInfo(albumFile);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}
@@ -58,7 +57,6 @@ public class MusicStore {
 				album.addSong(song); // add all the songs in the tracklist to the array of songs
 			} store.put(info[0], album); // { "Album title": Album }
 		} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	}

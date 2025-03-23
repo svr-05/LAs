@@ -1,9 +1,8 @@
 package database.model;
 
+import database.store.MusicStore;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import database.store.MusicStore;
 
 public class LibraryModel{
 
@@ -12,6 +11,7 @@ public class LibraryModel{
 	private ArrayList<Album> albumLibrary;
 	private ArrayList<SongData> favorites; // Holds the songs that are favorited
 	private MusicStore musicStore;
+	private boolean printToConsole; // determines if we want to print to console
 	
 	//Constructors
 	public LibraryModel() {
@@ -20,20 +20,13 @@ public class LibraryModel{
 		this.albumLibrary = new ArrayList<>();
 		this.favorites = new ArrayList<>();
 		this.musicStore = new MusicStore();
+		this.printToConsole = true;
 		musicStore.parseAlbums(); // That way we load all of the music store here!
 	}
-
-	//Getters
-	public ArrayList<PlayList> getUserList() { 
-		return new ArrayList<>(this.userList);
-	}
-	public ArrayList<Song> getSongLibrary() {
-		return new ArrayList<>(this.songLibrary);
-	}
-	public ArrayList<Album> getAlbumLibrary(){
-		return new ArrayList<>(this.albumLibrary);
-	}
 	
+	// setter
+	public void setPrintToConsole(boolean b) { this.printToConsole = b; }
+
 	public void addSong(String Stitle) {
 	    boolean songFound = false;
 	    for (SongData sD : musicStore.getSongData()) { // check all the songs in the library
@@ -89,7 +82,6 @@ public class LibraryModel{
 	    System.out.println("Song not found in the library.");
 	}
 
-
 	/*
 	 * @pre: name != null
 	 */
@@ -124,12 +116,16 @@ public class LibraryModel{
 	 */
 	public void addSongToPlayList(String pName, String songName) {
 		// compare
+		if (userList.isEmpty() && printToConsole) {
+			System.out.println("Create playlist first");
+			return;
+		}
 		for(PlayList p : userList) { // mirror the same logic modeled above
 			if(p.getTitle().equalsIgnoreCase(pName)) {
 				for(Song s : songLibrary) {
 					if(s.getTitle().equalsIgnoreCase((songName))) {
 						p.addSong(s);
-						System.out.println("Song has been added :D");
+						System.out.println(songName + " has been added :D");
 						return;
 					}
 				}
@@ -137,7 +133,6 @@ public class LibraryModel{
 			System.out.println("Song not in library");
 			return;
 		}
-		System.out.println("Create playlist first");
 	}
 	
 	//Remove Song
@@ -145,6 +140,10 @@ public class LibraryModel{
 	 * @pre: pName != null && songName != null
 	 */
 	public void removeSongFromPlayList(String pName, String songName) {
+		if (printToConsole && userList.isEmpty()) {
+			System.out.println("Create playlist first");
+			return;
+		}
 		for(PlayList p: userList) {
 			if(p.getTitle().equalsIgnoreCase(pName)) {
 				for(Song s : songLibrary) {
@@ -158,17 +157,16 @@ public class LibraryModel{
 				return;
 			}
 		}
-		System.out.println("Create playlist first");
 	}
 	
 	//Methods for GetLists/Searching
 	//Returns a list of Song names from the library
 	public ArrayList<String> getSongTitles(){
-		if (songLibrary.isEmpty()) {
+		if (songLibrary.isEmpty() && printToConsole) {
 			System.out.println("You haven't added any songs yet -_-"); 
 			return new ArrayList<>();
 		}
-		System.out.println("🎵");
+		if (printToConsole) System.out.println("🎵");
 		ArrayList<String> result = new ArrayList<>();
 		for(Song s : songLibrary) {
 			result.add(s.getTitle());
@@ -178,11 +176,13 @@ public class LibraryModel{
 	
 	//Returns a set of Artists from the library
 	public HashSet<String> getArtists(){ // as opposed to the other "serchers" for the
-		if (songLibrary.isEmpty()) {     // library, this one uses a set to avoid repetition!
+		if (songLibrary.isEmpty() && printToConsole) {     // library, this one uses a set to avoid repetition!
 			System.out.println("Add a song to add an artist!");
 			return new HashSet<>();
 		}
-		System.out.println("🎤");
+		
+		if (printToConsole)System.out.println("🎤");
+
 		HashSet<String> result = new HashSet<>(); 
 		for(Song s : songLibrary) {                  
 			result.add(s.getAuthor());
@@ -192,11 +192,13 @@ public class LibraryModel{
 	
 	//Returns a list of Albums from the Library
 	public ArrayList<String> getAlbumList() {
-		if (albumLibrary.isEmpty()) {
+		if (albumLibrary.isEmpty() && printToConsole) {
 			System.out.println("You haven't added any albums");
 			return new ArrayList<>();
 		}
-		System.out.println("💿");
+
+		if (printToConsole) System.out.println("💿");
+
 		ArrayList<String> result = new ArrayList<>();
 		for(Album a : albumLibrary) {
 			result.add(a.getName());
@@ -206,11 +208,12 @@ public class LibraryModel{
 	
 	//Returns a list of strings with the playlist titles from the Library list
 	public ArrayList<String> getPlayList(){
-		if (userList.isEmpty()) {
+		if (userList.isEmpty() && printToConsole) {
 			System.out.println("Create a playlist first");
 			return new ArrayList<>();
 		}
-		System.out.println("🎧");
+		if (printToConsole)System.out.println("🎧");
+
 		ArrayList<String> result = new ArrayList<>();
 		for(PlayList p : userList) {
 			result.add(p.getTitle());
@@ -220,11 +223,12 @@ public class LibraryModel{
 	
 	//Returns a List of all songs on Favorites
 	public HashSet<String> getFavorites(){
-		if (favorites.isEmpty()) {
+		if (favorites.isEmpty() && printToConsole) {
 			System.out.println("You don't have any favorite songs yet 🙃");
 			return new HashSet<>();
 		}
-		System.out.println("🖤");
+		if (printToConsole)System.out.println("🖤");
+
 		HashSet<String> result = new HashSet<>();
 		for(SongData d: favorites) {
 			result.add(d.toString());

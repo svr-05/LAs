@@ -25,7 +25,7 @@ public class PlayList {
 		return new ArrayList<>(body);
 	}
 	
-	//Methods
+	// setters
 	public void addSong(Song s) {
 		body.add(s); // no need for a copy
 	}
@@ -34,7 +34,6 @@ public class PlayList {
 		body.remove(s);
 	}
 	
-	//StringMethod
 	@Override
 	public String toString(){
 		String result = "";
