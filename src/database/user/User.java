@@ -1,6 +1,8 @@
 package database.user;
 
 import database.model.LibraryModel;
+import database.model.PlayList;
+import database.model.Song;
 import java.io.*;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -137,10 +139,20 @@ public final class User { // No point in having a subclass for user
                 writer.newLine();
             }
             
-            // write the playlists
+            // write the playlists and their contents
             for (String playlistName : musicLibrary.getPlayList()) {
                 writer.write("PLAYLIST :" + playlistName);
                 writer.newLine();
+                // Write each song in the playlist
+                for (PlayList p : musicLibrary.getUserList()) {
+                    if (p.getTitle().equals(playlistName)) {
+                        for (Song s : p.getBody()) {
+                            writer.write("PLAYLIST_SONG :" + playlistName + ":" + s.getTitle());
+                            writer.newLine();
+                        }
+                        break;
+                    }
+                }
             }  
             // write favorites
             for (String favorite : musicLibrary.getFavorites()) {
@@ -190,6 +202,11 @@ public final class User { // No point in having a subclass for user
                         break;
                     case "PLAYLIST":
                         musicLibrary.makePlayList(content);
+                        break;
+                    case "PLAYLIST_SONG":
+                        String playlistName = content;
+                        String songTitle = parts[2].trim();
+                        musicLibrary.addSongToPlayList(playlistName, songTitle);
                         break;
                     case "FAVORITE":
                         musicLibrary.addFavorite(content);

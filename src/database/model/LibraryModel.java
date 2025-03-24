@@ -93,8 +93,19 @@ public class LibraryModel {
 	 * @pre: name != null
 	 */
 	public void makePlayList(String name){ 
+		// Check if playlist with this name already exists
+		for (PlayList p : userList) {
+			if (p.getTitle().equalsIgnoreCase(name)) {
+				if (printToConsole) {
+					System.out.println("Playlist " + name + " already exists!");
+				}
+				return;
+			}
+		}
 		userList.add(new PlayList(name));
-		System.out.println(String.format("Playlist %s has been made!", name));
+		if (printToConsole) {
+			System.out.println(String.format("Playlist %s has been made!", name));
+		}
 	}
 	
 	//Rate a Song
@@ -187,7 +198,7 @@ public class LibraryModel {
 		return result;
 	}
 	
-	//Returns a set of Artists from the library
+	//returns a set of Artists from the library
 	public HashSet<String> getArtists(){ // as opposed to the other "serchers" for the
 		if (songLibrary.isEmpty() && printToConsole) {     // library, this one uses a set to avoid repetition!
 			System.out.println("Add a song to add an artist!");
@@ -543,7 +554,7 @@ public class LibraryModel {
 		return new PlayList("Recently Played");
 	}
 
-	/**
+	/*
 	 * list of 10 most frequently played songs, highest play count first
 	 */
 	private ArrayList<Song> getMostPlayedSongs() {
@@ -596,15 +607,15 @@ public class LibraryModel {
 			userList.add(mostPlayedPlaylist);
 		}
 
-		// Get the sorted list of most played songs
+		// get the sorted list of most played songs
 		ArrayList<Song> mostPlayed = getMostPlayedSongs();
 		
-		// Clear the playlist by removing all songs
+		// clear the playlist by removing all songs
 		while (!mostPlayedPlaylist.getBody().isEmpty()) {
 			mostPlayedPlaylist.remove(mostPlayedPlaylist.getBody().get(0));
 		}
 		
-		// Add songs in the correct order using addSong
+		// add songs in the correct order using addSong
 		for (Song song : mostPlayed) {
 			mostPlayedPlaylist.addSong(song);
 		}
@@ -666,5 +677,117 @@ public class LibraryModel {
 		ArrayList<Song> sortedSongs = new ArrayList<>(songLibrary);
 		sortedSongs.sort(ratingComparator());
 		return sortedSongs;
+	}
+
+	// remove a song from the library
+	public void removeSongFromLib(String songTitle) {
+		// first find the song in the library
+		Song songToRemove = null;
+		for (Song s : songLibrary) {
+			if (s.getTitle().equalsIgnoreCase(songTitle)) {
+				songToRemove = s;
+				break;
+			}
+		}
+		
+		if (songToRemove == null) {
+			System.out.println(songTitle + " is not in the library");
+			return;
+		}
+		
+		// remove from main song library
+		songLibrary.remove(songToRemove);
+		
+		// Remove from all playlists
+		for (PlayList playlist : userList) {
+			playlist.remove(songToRemove);
+		}
+		
+		// remove from favorites
+		for (int i = favorites.size() - 1; i >= 0; i--) {
+			if (favorites.get(i).getSongObject().equals(songToRemove)) {
+				favorites.remove(i);
+			}
+		}
+		
+		// remove from recently played
+		recentlyPlayed.remove(songToRemove);
+		
+		// Remove from play count
+		playCount.remove(songToRemove);
+		
+		// remove from albums
+		for (int i = albumLibrary.size() - 1; i >= 0; i--) {
+			Album album = albumLibrary.get(i);
+			album.getSongs().remove(songToRemove);
+			if (album.getSongs().isEmpty()) { // if the last song is removed, remove the album
+				albumLibrary.remove(i);
+			}
+		}
+		
+		System.out.println(songTitle + " has been removed from the library");
+	}
+
+	public void removeAlbumFromLib(String albumTitle) {
+		// find the album to remove
+		Album albumToRemove = null;
+		for (Album a : albumLibrary) {
+			if (a.getName().equalsIgnoreCase(albumTitle)) {
+				albumToRemove = a;
+				break;
+			}
+		}
+		
+		if (albumToRemove == null) {
+			System.out.println(albumTitle + " is not in the library");
+			return;
+		}
+		
+		// get all songs from the album
+		ArrayList<Song> albumSongs = new ArrayList<>(albumToRemove.getSongs());
+		
+		// remove album from albumLibrary
+		albumLibrary.remove(albumToRemove);
+		
+		for (Song song : albumSongs) {
+			// check if song exists in other albums
+			boolean songInOtherAlbums = false;
+			for (Album album : albumLibrary) {
+				if (album.getSongs().contains(song)) {
+					songInOtherAlbums = true;
+					break;
+				}
+			}
+			
+			// if song is not in other albums, remove it from all collections
+			if (!songInOtherAlbums) {
+				// remove from main song library
+				songLibrary.remove(song);
+				
+				// remove from all playlists
+				for (PlayList playlist : userList) {
+					playlist.remove(song);
+				}
+				
+				// remove from favorites
+				for (int i = favorites.size() - 1; i >= 0; i--) {
+					if (favorites.get(i).getSongObject().equals(song)) {
+						favorites.remove(i);
+					}
+				}
+				
+				// remove from recently played
+				recentlyPlayed.remove(song);
+				
+				// remove from play count
+				playCount.remove(song);
+			}
+		}
+		
+		System.out.println(albumTitle + " has been removed from the library");
+	}
+
+	public ArrayList<PlayList> getUserList() {
+		return new ArrayList<>(userList);
 	}
 }
