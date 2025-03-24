@@ -2,6 +2,7 @@ package database.model;
 
 import database.store.MusicStore;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Comparator;
@@ -261,29 +262,64 @@ public class LibraryModel {
 	}
 	
 	//Search Methods
-	//Search for Song by Tile
 	/*
+	 * Search for Song by Title
 	 * @pre: a_t != null
+	 * @return true if song was found, false otherwise
 	 */
-	public void searchSongbyString(String a_t){
+	public boolean searchSongbyString(String songName){
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Song s1: songLibrary) {	// Makes sure to retrieve the song that does match the artist
-			if(a_t.equalsIgnoreCase(s1.getTitle())) { 
+			if(songName.equalsIgnoreCase(s1.getTitle())) { 
 				songsByString.add(s1); 
 			}
 		}
 		if(songsByString.isEmpty()) {
 			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+			return false;
 		}
 		else {
 			for(Song p: songsByString) { // Prints the songs retrieved from the resulted iteration
 				System.out.println(p.toString());
 			}
+			return true;
 		}
 	}
-	
-	//Search for an Album by Title or Artist
+
 	/*
+	 * method to output album info
+	 * @pre: songName != null
+	 */
+	public void outputAlbumInfo(String songName) {
+		String albumName;
+		boolean inLibrary = false;
+
+		for (Song s : songLibrary) {
+			if (s.getTitle().equalsIgnoreCase(songName)) {
+				albumName = s.getAlbum();
+
+				for (Album a : albumLibrary) {
+					if (a.getName().equalsIgnoreCase(albumName)) {
+						inLibrary = true;
+					}
+				}
+
+				if (inLibrary) {
+					// call the other search method
+					searchAlbumbyString(albumName);
+				}
+				else {
+					System.out.println("\nAlbum: '" + albumName + "' not in your library but here's the info from the store!\n");
+					musicStore.searchAlbumbyString(albumName);
+				}
+
+			}
+		}
+		
+	}
+
+	/*
+	 * Search for an Album by Title or Artist
 	 * @pre: a_t != null
 	 */
 	public void searchAlbumbyString(String a_t){
@@ -789,5 +825,30 @@ public class LibraryModel {
 
 	public ArrayList<PlayList> getUserList() {
 		return new ArrayList<>(userList);
+	}
+
+	public void shuffleSongs() {
+		Collections.shuffle(songLibrary);
+	}
+
+	public void shufflePlayList(String pName) {
+		if (pName.equalsIgnoreCase("Recently Played") ||
+			pName.equalsIgnoreCase("Most Played")) {
+			return;
+		}
+		for (int i = 0; i < userList.size(); i++) {
+			PlayList p = userList.get(i);
+			// recall the getBody() method is a defensive copy, thus we need this approach
+			if (p.getTitle().equalsIgnoreCase(pName)) {
+				ArrayList<Song> songs = new ArrayList<>(p.getBody());
+				Collections.shuffle(songs);
+				PlayList shuffledPlaylist = new PlayList(pName);
+				for (Song song : songs) {
+					shuffledPlaylist.addSong(song);
+				}
+				userList.set(i, shuffledPlaylist);
+				break;
+			}
+		}
 	}
 }

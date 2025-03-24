@@ -10,7 +10,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 /*
  * The view has been AI generated, we used a drafted code as "sample" so we could give AI an idea
- * on how to shape the view. The lines with // at the end were manually added
+ * on how to shape the view. From there, we manually added features and reprompted the AI to add
+ * functionallity.
  */
 public class View {
     public static void main(String[] args) {
@@ -109,12 +110,12 @@ public class View {
         String choice;
         do {
             System.out.println("\n-- Music Store --"); 
-            System.out.println("1 - Search for a Song by Title"); //
-            System.out.println("2 - Search for a Song by Artist"); //
-            System.out.println("3 - Search for an Album by Title"); //
-            System.out.println("4 - Search for an Album by Artist"); //
+            System.out.println("1 - Search for a Song by Title");
+            System.out.println("2 - Search for a Song by Artist");
+            System.out.println("3 - Search for an Album by Title");
+            System.out.println("4 - Search for an Album by Artist");
             System.out.println("B - Back");
-            System.out.print("Select an option: "); //
+            System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
             
             switch (choice) {
@@ -165,6 +166,10 @@ public class View {
             System.out.println("15 - View Recently Played Songs");
             System.out.println("16 - View Most Played Songs");
             System.out.println("17 - View Sorted Songs");
+            System.out.println("18 - Remove Song from Library");
+            System.out.println("19 - Remove Album from Library");
+            System.out.println("20 - Shuffle All Songs");
+            System.out.println("21 - Shuffle Playlist");
             System.out.println("B  - Back");
             System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
@@ -183,7 +188,13 @@ public class View {
                 case "3" -> {
                     System.out.print("Enter song title: ");
                     String title = scanner.nextLine();
-                    libraryModel.searchSongbyString(title);
+                    if (libraryModel.searchSongbyString(title)) {
+                        System.out.print("\nWould you like to get the album info? (y/n): ");
+                        String response = scanner.nextLine().toLowerCase();
+                        if (response.equals("y")) {
+                            libraryModel.outputAlbumInfo(title);
+                        }
+                    }
                 }
                 case "4" -> {
                     System.out.print("Enter artist name: ");
@@ -324,6 +335,26 @@ public class View {
                             System.out.printf("%d. %s%n", i + 1, sortedSongs.get(i).toString());
                         }
                     }
+                }
+                case "18" -> {
+                    System.out.print("Enter song title to remove: ");
+                    String songTitle = scanner.nextLine();
+                    libraryModel.removeSongFromLib(songTitle);
+                }
+                case "19" -> {
+                    System.out.print("Enter album title to remove: ");
+                    String albumTitle = scanner.nextLine();
+                    libraryModel.removeAlbumFromLib(albumTitle);
+                }
+                case "20" -> {
+                    libraryModel.shuffleSongs();
+                    System.out.println("All songs in your library have been shuffled!");
+                }
+                case "21" -> {
+                    System.out.print("Enter playlist name to shuffle: ");
+                    String playlistName = scanner.nextLine();
+                    libraryModel.shufflePlayList(playlistName);
+                    System.out.println("Playlist has been shuffled!");
                 }
                 case "b" -> System.out.println("Returning to main menu...\n");
                 default -> System.out.println("Invalid input. Please try again.\n");
