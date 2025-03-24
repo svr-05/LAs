@@ -4,6 +4,7 @@ import database.store.MusicStore;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Comparator;
 
 public class LibraryModel {
 	private ArrayList<PlayList> userList; 
@@ -609,5 +610,61 @@ public class LibraryModel {
 		}
 		
 		return mostPlayedPlaylist;
+	}
+
+	// comparator methods for sorting songs
+	private Comparator<Song> titleComparator() {
+		return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				return song1.getTitle().compareToIgnoreCase(song2.getTitle());
+			}
+		};
+	}
+	
+	private Comparator<Song> artistComparator() {
+		return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				return song1.getAuthor().compareToIgnoreCase(song2.getAuthor());
+			}
+		};
+	}
+	
+	private Comparator<Song> ratingComparator() {
+		return new Comparator<Song>() {
+			public int compare(Song song1, Song song2) {
+				// get SongData objects to access ratings
+				SongData data1 = null;
+				SongData data2 = null;
+				for (SongData d : musicStore.getSongData()) {
+					if (d.getSongObject().equals(song1)) data1 = d;
+					if (d.getSongObject().equals(song2)) data2 = d;
+				}
+				
+				// compare ratings (higher rating first)
+				if (data1 != null && data2 != null) {
+					return data2.getRating().compareTo(data1.getRating());
+				}
+				return 0;
+			}
+		};
+	}
+
+	// methods to get sorted lists
+	public ArrayList<Song> getSongsSortedByTitle() {
+		ArrayList<Song> sortedSongs = new ArrayList<>(songLibrary);
+		sortedSongs.sort(titleComparator());
+		return sortedSongs;
+	}
+	
+	public ArrayList<Song> getSongsSortedByArtist() {
+		ArrayList<Song> sortedSongs = new ArrayList<>(songLibrary);
+		sortedSongs.sort(artistComparator());
+		return sortedSongs;
+	}
+	
+	public ArrayList<Song> getSongsSortedByRating() {
+		ArrayList<Song> sortedSongs = new ArrayList<>(songLibrary);
+		sortedSongs.sort(ratingComparator());
+		return sortedSongs;
 	}
 }

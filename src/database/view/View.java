@@ -164,6 +164,7 @@ public class View {
             System.out.println("14 - Play a Song");
             System.out.println("15 - View Recently Played Songs");
             System.out.println("16 - View Most Played Songs");
+            System.out.println("17 - View Sorted Songs");
             System.out.println("B  - Back");
             System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
@@ -285,6 +286,42 @@ public class View {
                         // Print in order to show most played first
                         for (int i = 0; i < mostPlayed.size(); i++) {
                             System.out.printf("%d. %s%n", i + 1, mostPlayed.get(i).toString());
+                        }
+                    }
+                }
+                case "17" -> {
+                    System.out.println("\nSort Songs By:");
+                    System.out.println("a - Title");
+                    System.out.println("b - Artist");
+                    System.out.println("c - Rating");
+                    System.out.print("Select sorting option: ");
+                    String sortChoice = scanner.nextLine();
+                    
+                    ArrayList<Song> sortedSongs;
+                    switch (sortChoice) {
+                        case "a" -> {
+                            System.out.println("\nSongs Sorted by Title:");
+                            sortedSongs = libraryModel.getSongsSortedByTitle();
+                        }
+                        case "b" -> {
+                            System.out.println("\nSongs Sorted by Artist:");
+                            sortedSongs = libraryModel.getSongsSortedByArtist();
+                        }
+                        case "c" -> {
+                            System.out.println("\nSongs Sorted by Rating:");
+                            sortedSongs = libraryModel.getSongsSortedByRating();
+                        }
+                        default -> {
+                            System.out.println("Invalid sorting option.");
+                            continue;
+                        }
+                    }
+                    
+                    if (sortedSongs.isEmpty()) {
+                        System.out.println("No songs in your library.");
+                    } else {
+                        for (int i = 0; i < sortedSongs.size(); i++) {
+                            System.out.printf("%d. %s%n", i + 1, sortedSongs.get(i).toString());
                         }
                     }
                 }
