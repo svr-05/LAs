@@ -79,11 +79,9 @@ public final class UserDatabase {
                 String saltHex = reader.readLine();          // read salt value
                 String hashedPassword = reader.readLine();   // read encrypted password               
             
-                User user = new User(username, ""); // password is "" so we don't make a new hash and salt
-                user.setSalt(User.hexStringToByteArray(saltHex)); // set user's salt
-                user.setEncryptedPassword(hashedPassword);  // set user's password
-                users.put(username, user);                  // add to users map
-                
+                // create user with existing salt and password from file
+                User user = new User(username, User.hexStringToByteArray(saltHex), hashedPassword);
+                users.put(username, user); // add to users map
             }
         } catch (IOException e) {                 
             e.printStackTrace();                         

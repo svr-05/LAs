@@ -28,6 +28,17 @@ public final class User { // No point in having a subclass for user
         this.musicLibrary = new LibraryModel();
     }
 
+    /*
+     * overloaded constructor for loading existing users from file. It avoids generating new salt
+     * and hash when we already have them.
+     */
+    public User(String username, byte[] saltFromFile, String encryptedPasswordFromFile) {
+        this.username = username;
+        this.salt = saltFromFile;
+        this.encryptedPassword = encryptedPasswordFromFile;
+        this.musicLibrary = new LibraryModel();
+    }
+
     // getters
     public String getUsername() { return username; }
 
@@ -166,6 +177,7 @@ public final class User { // No point in having a subclass for user
             String line;
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(":");
+                
                 String type = parts[0].trim();
                 String content = parts[1].trim();
                     

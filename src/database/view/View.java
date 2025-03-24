@@ -1,9 +1,12 @@
 package database.view;
 
 import database.model.LibraryModel;
+import database.model.PlayList;
+import database.model.Song;
 import database.store.MusicStore;
 import database.user.User;
 import database.user.UserDatabase;
+import java.util.ArrayList;
 import java.util.Scanner;
 /*
  * The view has been AI generated, we used a drafted code as "sample" so we could give AI an idea
@@ -39,7 +42,7 @@ public class View {
                         String password = scanner.nextLine();
                         currentUser = userDatabase.loginUser(username, password);
                         if (currentUser == null) {
-                            System.out.println("Invalid username or password.");
+                            System.out.println("Invalid authentivation info.\n                           Have you registered??");
                         } else {
                             System.out.println("\n---------------------------");
                             System.out.println("Welcome back, " + username + "!");
@@ -145,20 +148,23 @@ public class View {
         String choice;
         do {
             System.out.println("\n-- Music Library --");
-            System.out.println("1 - Add a Song to Library");
-            System.out.println("2 - Add an Album to Library");
-            System.out.println("3 - Search for a Song by Title");
-            System.out.println("4 - Search for a Song by Artist");
-            System.out.println("5 - Search for an Album by Title");
-            System.out.println("6 - Search for an Album by Artist");
-            System.out.println("7 - Create a Playlist");
-            System.out.println("8 - Add Song to Playlist");
-            System.out.println("9 - Remove Song from Playlist");
+            System.out.println("1  - Add a Song to Library");
+            System.out.println("2  - Add an Album to Library");
+            System.out.println("3  - Search for a Song by Title");
+            System.out.println("4  - Search for a Song by Artist");
+            System.out.println("5  - Search for an Album by Title");
+            System.out.println("6  - Search for an Album by Artist");
+            System.out.println("7  - Create a Playlist");
+            System.out.println("8  - Add Song to Playlist");
+            System.out.println("9  - Remove Song from Playlist");
             System.out.println("10 - Mark Song as Favorite");
             System.out.println("11 - Rate a Song");
             System.out.println("12 - View Lists (Songs, Artists, Albums, Playlists, Favorites)");
             System.out.println("13 - Search for a Playlist by Name");
-            System.out.println("B - Back");
+            System.out.println("14 - Play a Song");
+            System.out.println("15 - View Recently Played Songs");
+            System.out.println("16 - View Most Played Songs");
+            System.out.println("B  - Back");
             System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
             
@@ -250,6 +256,37 @@ public class View {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
                     libraryModel.searchPlayListName(playlistName);
+                }
+                case "14" -> {
+                    System.out.print("Enter song title to play: ");
+                    String songTitle = scanner.nextLine();
+                    libraryModel.playSong(songTitle);
+                }
+                case "15" -> {
+                    System.out.println("\nRecently Played Songs:");
+                    PlayList recentSongs = libraryModel.getRecentlyPlayed();
+                    ArrayList<Song> recentSongsList = recentSongs.getBody();
+                    if (recentSongsList.isEmpty()) {
+                        System.out.println("No songs have been played yet.");
+                    } else {
+                        // Print in reverse order to show most recent first
+                        for (int i = recentSongsList.size() - 1; i >= 0; i--) {
+                            System.out.printf("%d. %s%n", recentSongsList.size() - i, recentSongsList.get(i).toString());
+                        }
+                    }
+                }
+                case "16" -> {
+                    System.out.println("\nMost Played Songs:");
+                    PlayList mostPlayedList = libraryModel.getMostPlayed();
+                    ArrayList<Song> mostPlayed = mostPlayedList.getBody();
+                    if (mostPlayed.isEmpty()) {
+                        System.out.println("No songs have been played yet.");
+                    } else {
+                        // Print in order to show most played first
+                        for (int i = 0; i < mostPlayed.size(); i++) {
+                            System.out.printf("%d. %s%n", i + 1, mostPlayed.get(i).toString());
+                        }
+                    }
                 }
                 case "b" -> System.out.println("Returning to main menu...\n");
                 default -> System.out.println("Invalid input. Please try again.\n");

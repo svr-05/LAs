@@ -2,16 +2,20 @@ package database.model;
 
 import database.store.MusicStore;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
-public class LibraryModel{
-
+public class LibraryModel {
 	private ArrayList<PlayList> userList; 
-	private ArrayList<Song> songLibrary; // Holds in a Song
+	private ArrayList<Song> songLibrary; // holds in a Song
 	private ArrayList<Album> albumLibrary;
-	private ArrayList<SongData> favorites; // Holds the songs that are favorited
+	private ArrayList<SongData> favorites; // holds the songs that are favorited
+	
+	private ArrayList<Song> recentlyPlayed; // stores last 10 played songs
+	private HashMap<Song, Integer> playCount; // tracks play count for each song
 	private MusicStore musicStore;
-	private boolean printToConsole; // determines if we want to print to console
+	
+	private boolean printToConsole; // a flag to determine if we want to print to console
 	
 	//Constructors
 	public LibraryModel() {
@@ -19,6 +23,8 @@ public class LibraryModel{
 		this.songLibrary = new ArrayList<>();
 		this.albumLibrary = new ArrayList<>();
 		this.favorites = new ArrayList<>();
+		this.recentlyPlayed = new ArrayList<>();
+		this.playCount = new HashMap<>();
 		this.musicStore = new MusicStore();
 		this.printToConsole = true;
 		musicStore.parseAlbums(); // That way we load all of the music store here!
@@ -35,7 +41,7 @@ public class LibraryModel{
 	            if (musicStore.checkStoreSong(S.getTitle())) {
 	                if (!checkSongList(S)) { // add the song if it's not yet in the library
 	                    songLibrary.add(S);
-	                    System.out.println("Song has been Added!");
+	                    System.out.println(Stitle + " has been Added!");
 	                    songFound = true;
 	                }
 	            }
@@ -58,7 +64,7 @@ public class LibraryModel{
 								addSong(s.getTitle());
 							}
 						}
-						System.out.println("Albums have been Added :)");
+						System.out.println("\n" + aTitle + " has been Added :)");
 						break;
 					}
 					else System.out.println("Album already in the library");
@@ -120,8 +126,11 @@ public class LibraryModel{
 			System.out.println("Create playlist first");
 			return;
 		}
-		for(PlayList p : userList) { // mirror the same logic modeled above
+		
+		boolean playlistFound = false;
+		for(PlayList p : userList) {
 			if(p.getTitle().equalsIgnoreCase(pName)) {
+				playlistFound = true;
 				for(Song s : songLibrary) {
 					if(s.getTitle().equalsIgnoreCase((songName))) {
 						p.addSong(s);
@@ -129,9 +138,12 @@ public class LibraryModel{
 						return;
 					}
 				}
+				System.out.println("Song not in library");
+				return;
 			}
-			System.out.println("Song not in library");
-			return;
+		}
+		if (!playlistFound && printToConsole) {
+			System.out.println("Playlist not found");
 		}
 	}
 	
@@ -374,7 +386,7 @@ public class LibraryModel{
 		return result;
 	}
 	
-	//Retrieve the List of SONG DATA
+	// retrieve the List of SONG DATA
 	private ArrayList<SongData> getDataInLibrary(){
 		ArrayList<SongData> result = new ArrayList<>();
 		for(SongData d : musicStore.getSongData()) {
@@ -409,5 +421,193 @@ public class LibraryModel{
 			}
 		}
 		return false;
+	}
+
+	/*
+	 * simulate playing a song by updating recently played and play count lists
+	 */
+	public boolean playSong(String songTitle) {
+		boolean songExists = false;
+		Song song = null; // song holds the song object (if it exists in the library)
+		for (Song s : songLibrary) {
+			if (s.getTitle().equalsIgnoreCase(songTitle)) {
+				songExists = true;
+				song = s;
+				break;
+			}
+		}
+
+		if (!songExists) {
+			if (printToConsole) {
+				System.out.println("Song '" + songTitle + "' not found in library.");
+			}
+			return false;
+		}
+
+		// create automatic playlists if they don't exist
+		boolean hasRecentPlaylist = false;
+		boolean hasMostPlayedPlaylist = false;
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Recently Played")) {
+				hasRecentPlaylist = true;
+			} else if (p.getTitle().equals("Most Played")) {
+				hasMostPlayedPlaylist = true;
+			}
+		}
+		if (!hasRecentPlaylist) {
+			userList.add(new PlayList("Recently Played"));
+		}
+		if (!hasMostPlayedPlaylist) {
+			userList.add(new PlayList("Most Played"));
+		}
+
+		// update play count
+		int currentCount = 0;
+		if (playCount.containsKey(song)) {
+			currentCount = playCount.get(song);
+		}
+		playCount.put(song, currentCount + 1);
+
+		// update recently played list
+		if (recentlyPlayed.contains(song)) {
+			recentlyPlayed.remove(song); // remove if already in list
+		}
+		recentlyPlayed.add(0, song); // add to front
+		
+		// keep only last 10 songs
+		while (recentlyPlayed.size() > 10) {
+			recentlyPlayed.remove(recentlyPlayed.size() - 1);
+		}
+
+		updateAutomaticPlaylists();
+
+		if (printToConsole) {
+			System.out.println("Playing: " + songTitle);
+		}
+		return true;
+	}
+
+	/*
+	 * updates both the Recently Played and Most Played automatic playlists
+	 */
+	private void updateAutomaticPlaylists() {
+		// update Recently Played playlist
+		PlayList recentPlaylist = null;
+		PlayList mostPlayedPlaylist = null;
+
+		// find the automatic playlists in userList
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Recently Played")) {
+				recentPlaylist = p;
+			} else if (p.getTitle().equals("Most Played")) {
+				mostPlayedPlaylist = p;
+			}
+		}
+
+		// clear and rebuild "recently played" playlist to account for any immediate changes
+		if (recentPlaylist != null) {
+			recentPlaylist = new PlayList("Recently Played");
+			// add songs in order (most recent first)
+			for (Song song : recentlyPlayed) {
+				recentPlaylist.addSong(song);
+			}
+		}
+
+		// same for "most played" playlist
+		if (mostPlayedPlaylist != null) {
+			mostPlayedPlaylist = new PlayList("Most Played");
+			ArrayList<Song> mostPlayed = getMostPlayedSongs();
+			// add songs in order (highest play count first)
+			for (Song song : mostPlayed) {
+				mostPlayedPlaylist.addSong(song);
+			}
+		}
+	}
+
+	/**
+	 * get playList containing the 10 most recently played songs
+	 */
+	public PlayList getRecentlyPlayed() {
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Recently Played")) {
+				// Clear and rebuild the playlist in reverse order
+				p = new PlayList("Recently Played");
+				for (int i = recentlyPlayed.size() - 1; i >= 0; i--) {
+					p.addSong(recentlyPlayed.get(i));
+				}
+				return p;
+			}
+		}
+		// This shouldn't happen as the playlist is created in constructor
+		return new PlayList("Recently Played");
+	}
+
+	/**
+	 * list of 10 most frequently played songs, highest play count first
+	 */
+	private ArrayList<Song> getMostPlayedSongs() {
+		ArrayList<Song> result = new ArrayList<>();    
+		// if no songs have been played yet, return empty list
+		if (playCount.isEmpty()) {
+			return result;
+		}
+		
+		// get all songs that have been played
+		ArrayList<Song> songs = new ArrayList<>(playCount.keySet());
+		
+		// sort songs by play count (descending order)
+		for (int i = 0; i < songs.size() - 1; i++) {
+			for (int j = 0; j < songs.size() - 1 - i; j++) {
+				// compare play counts in descending order (highest first)
+				int count1 = playCount.get(songs.get(j));
+				int count2 = playCount.get(songs.get(j + 1));
+				if (count1 < count2) {
+					// swap songs if current song has lower play count than next song
+					Song temp = songs.get(j);
+					songs.set(j, songs.get(j + 1));
+					songs.set(j + 1, temp);
+				}
+			}
+		}
+		
+		// take only the top 10 songs at most
+		int numSongs = Math.min(10, songs.size());
+		for (int i = 0; i < numSongs; i++) {
+			result.add(songs.get(i));
+		}
+		return result;
+	}
+
+	/*
+	 * playList containing the 10 most played songs
+	 */
+	public PlayList getMostPlayed() {
+		// Find or create the Most Played playlist
+		PlayList mostPlayedPlaylist = null;
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Most Played")) {
+				mostPlayedPlaylist = p;
+				break;
+			}
+		}
+		if (mostPlayedPlaylist == null) {
+			mostPlayedPlaylist = new PlayList("Most Played");
+			userList.add(mostPlayedPlaylist);
+		}
+
+		// Get the sorted list of most played songs
+		ArrayList<Song> mostPlayed = getMostPlayedSongs();
+		
+		// Clear the playlist by removing all songs
+		while (!mostPlayedPlaylist.getBody().isEmpty()) {
+			mostPlayedPlaylist.remove(mostPlayedPlaylist.getBody().get(0));
+		}
+		
+		// Add songs in the correct order using addSong
+		for (Song song : mostPlayed) {
+			mostPlayedPlaylist.addSong(song);
+		}
+		
+		return mostPlayedPlaylist;
 	}
 }

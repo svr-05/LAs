@@ -2,7 +2,7 @@ package database.model;
 
 import java.util.ArrayList;
 
-public class PlayList {
+public final class PlayList {
 	
 	private String title;
 	private ArrayList<Song> body;
@@ -27,7 +27,9 @@ public class PlayList {
 	
 	// setters
 	public void addSong(Song s) {
-		body.add(s); // no need for a copy
+		if (!body.contains(s)) { // only add if song isn't already in playlist
+			body.add(s);
+		}
 	}
 	
 	public void remove(Song s) {
