@@ -1,11 +1,11 @@
 package model;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 
 public class PlayList {
 	
 	private String title;
-	private HashSet<Song> body;
+	private ArrayList<Song> body;
 	
 	//Constructors
 	/*
@@ -13,7 +13,11 @@ public class PlayList {
 	 */
 	public PlayList(String title) {
 		this.title = title;
-		this.body = new HashSet<Song>();
+		this.body = new ArrayList<Song>();
+	}
+	public PlayList(PlayList P) {
+		this.title = P.getTitle();
+		this.body = P.getBody();
 	}
 
 	//Getters
@@ -21,8 +25,8 @@ public class PlayList {
 		return this.title;
 	}
 
-	public HashSet<Song> getBody() {
-		return new HashSet<>(body);
+	public ArrayList<Song> getBody() {
+		return new ArrayList<>(this.body);
 	}
 	
 	//Methods
@@ -32,6 +36,15 @@ public class PlayList {
 	
 	public void remove(Song s) {
 		body.remove(s);
+	}
+	
+	public boolean contains(Song s) {
+		for(Song sg : body) {
+			if(sg.equals(s)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	//StringMethod
