@@ -148,17 +148,18 @@ public class View {
             System.out.println("1 - Add a Song to Library");
             System.out.println("2 - Add an Album to Library");
             System.out.println("3 - Search for a Song by Title");
-            System.out.println("4 - Search for a Song by Artist");
-            System.out.println("5 - Search for an Album by Title");
-            System.out.println("6 - Search for an Album by Artist");
-            System.out.println("7 - Create a Playlist");
-            System.out.println("8 - Add Song to Playlist");
-            System.out.println("9 - Remove Song from Playlist");
-            System.out.println("10 - Mark Song as Favorite");
-            System.out.println("11 - Rate a Song");
-            System.out.println("12 - View Lists (Songs, Artists, Albums, Playlists, Favorites, Frequent, Recent)");
-            System.out.println("13 - Search for a Playlist by Name");
-            System.out.println("14 - Play a Song by Title");
+            System.out.println("4 - Search for a Song by Genre");
+            System.out.println("5 - Search for a Song by Artist");
+            System.out.println("6 - Search for an Album by Title");
+            System.out.println("7 - Search for an Album by Artist");
+            System.out.println("8 - Create a Playlist");
+            System.out.println("9 - Add Song to Playlist");
+            System.out.println("10 - Remove Song from Playlist");
+            System.out.println("11 - Mark Song as Favorite");
+            System.out.println("12 - Rate a Song");
+            System.out.println("13 - View Lists (Songs, Artists, Albums, Playlists, Favorites, Frequent, Recent)");
+            System.out.println("14 - Search for a Playlist by Name");
+            System.out.println("15 - Play a Song by Title");
             System.out.println("B - Back");
             System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
@@ -180,45 +181,50 @@ public class View {
                     libraryModel.searchSongbyString(title);
                 }
                 case "4" -> {
+                    System.out.print("Enter song genre: ");
+                    String genre = scanner.nextLine();
+                    libraryModel.searchByGenre(genre);
+                }
+                case "5" -> {
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
                     libraryModel.searchSongByTitleArtist(artist);
                 }
-                case "5" -> {
+                case "6" -> {
                     System.out.print("Enter album title: ");
                     String title = scanner.nextLine();
                     libraryModel.searchAlbumbyString(title);
                 }
-                case "6" -> {
+                case "7" -> {
                     System.out.print("Enter artist name: ");
                     String artist = scanner.nextLine();
                     libraryModel.searchAlbumbyTitleAuthor(artist);
                 }
-                case "7" -> {
-                    System.out.print("Enter playlist name: ");
-                    String playlistName = scanner.nextLine();
-                    libraryModel.makePlayList(playlistName);
-                }
                 case "8" -> {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
-                    System.out.print("Enter song title: ");
-                    String songTitle = scanner.nextLine();
-                    libraryModel.addSongToPlayList(playlistName, songTitle);
+                    libraryModel.makePlayList(playlistName);
                 }
                 case "9" -> {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
                     System.out.print("Enter song title: ");
                     String songTitle = scanner.nextLine();
-                    libraryModel.removeSongFromPlayList(playlistName, songTitle);
+                    libraryModel.addSongToPlayList(playlistName, songTitle);
                 }
                 case "10" -> {
+                    System.out.print("Enter playlist name: ");
+                    String playlistName = scanner.nextLine();
+                    System.out.print("Enter song title: ");
+                    String songTitle = scanner.nextLine();
+                    libraryModel.removeSongFromPlayList(playlistName, songTitle);
+                }
+                case "11" -> {
                     System.out.print("Enter song title: ");
                     String songTitle = scanner.nextLine();
                     libraryModel.addFavorite(songTitle);
                 }
-                case "11" -> {
+                case "12" -> {
                     System.out.print("Enter song title: ");
                     String songTitle = scanner.nextLine();
                     System.out.print("Enter rating (1-5): ");
@@ -226,7 +232,7 @@ public class View {
                     scanner.nextLine();
                     libraryModel.rateSong(songTitle, rating);
                 }
-                case "12" -> {
+                case "13" -> {
                     System.out.print("Enter category (Songs, Artists, Albums, Playlists, Favorites, Frequent, Recent): ");
                     String category = scanner.nextLine().toLowerCase();
                     if (category.contains("song") || category.contains("somg")) {
@@ -254,12 +260,12 @@ public class View {
                         System.out.println("Invalid category. Please enter one of: Songs, Artists, Albums, Playlists, Favorites.");
                     }
                 }
-                case "13" -> {
+                case "14" -> {
                     System.out.print("Enter playlist name: ");
                     String playlistName = scanner.nextLine();
                     libraryModel.searchPlayListName(playlistName);
                 }
-                case "14" -> {
+                case "15" -> {
                     libraryModel.playSong();
                 }
                 case "b" -> System.out.println("Returning to main menu...\n");
