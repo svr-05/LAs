@@ -287,7 +287,7 @@ public class LibraryModel{
 			}
 		}
 		if(albumsByString.isEmpty()) {
-			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!");
+			System.out.println("Item is not in your Library...Maybe buy it from the Music Store!!!");
 		}
 		else {
 			for(Album p: albumsByString) { // Prints the albums retrieved from the resulted iteration
@@ -455,6 +455,68 @@ public class LibraryModel{
 	}
 	public void getFrequentlyPlayed(){
 		System.out.println(queList.getFrequentlyPlayed());
+	}
+	
+	// Getting Assorted Lists
+	public void getAssortedTitles() {
+		ArrayList<Song> result = new ArrayList<>(getSongLibrary());
+		int minIndex;
+		for(int i = 0; i < result.size(); i++) {
+			minIndex = i;
+			for(int j = i + 1; i < result.size(); j++) {
+				if((result.get(i).getTitle().compareToIgnoreCase(result.get(minIndex).getTitle())) < 0) { minIndex = j; }
+			}
+	        if (minIndex != i) {
+	            Song temp = result.get(i);
+	            result.set(i, result.get(minIndex));
+	            result.set(minIndex, temp);
+	        }
+		}
+		for(int i = 0; i < result.size(); i++) {
+			System.out.println("-" + result.get(i).toString());
+		}
+	}
+	public void getAssortedArtists() {
+		ArrayList<Song> result = new ArrayList<>(getSongLibrary());
+		int minIndex;
+		for(int i = 0; i < result.size(); i++) {
+			minIndex = i;
+			for(int j = i + 1; i < result.size(); j++) {
+				if((result.get(i).getAuthor().compareToIgnoreCase(result.get(minIndex).getAuthor())) < 0) { minIndex = j; }
+			}
+	        if (minIndex != i) {
+	            Song temp = result.get(i);
+	            result.set(i, result.get(minIndex));
+	            result.set(minIndex, temp);
+	        }
+		}
+		for(int i = 0; i < result.size(); i++) {
+			System.out.println("-" + result.get(i).toString());
+		}
+	}
+	public void getAssortedRatings() {
+		ArrayList<SongData> library = new ArrayList<>(musicStore.getSongData());
+        for (int i = 0; i < library.size() - 1; i++) {
+            int minIndex = i;
+            for (int j = i + 1; j < library.size(); j++) {
+                if (library.get(j).getRating().ordinal() < library.get(minIndex).getRating().ordinal()) {  minIndex = j; }
+            }
+            SongData temp = library.get(i);
+            library.set(i, library.get(minIndex));
+            library.set(minIndex, temp);
+        }
+		for(int i = 0; i < library.size(); i++) {
+			System.out.println("-" + library.get(i).toString());
+		}
+	}
+	
+	// Searches a Song by Genre
+	public void searchByGenre(String Genre) {
+		for(Album a : getAlbumLibrary()) {
+			if(a.getGenre().equalsIgnoreCase(Genre)) {
+				for(Song s : a.getSongs()) { System.out.println(s.toString() + ", Genre: " + a.getGenre()); }
+			}
+		}
 	}
 	
 	
