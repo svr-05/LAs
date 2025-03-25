@@ -1,6 +1,6 @@
 package database.model;
 
-public class Song {
+public final class Song {
 	private String title,
 	               author,
 	               album;

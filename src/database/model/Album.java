@@ -2,7 +2,7 @@ package database.model;
 
 import java.util.ArrayList;
 
-public class Album {
+public final class Album {
 	// instance variables
 	private String name, 
 		           artist,

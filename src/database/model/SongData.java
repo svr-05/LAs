@@ -1,6 +1,6 @@
 package database.model;
 
-public class SongData {
+public final class SongData {
 	// instance variables
 	public enum ratingScale { 
 		NONE("Not Rated Yet"),

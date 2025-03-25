@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Comparator;
 
-public class LibraryModel {
+public final class LibraryModel {
 	private ArrayList<PlayList> userList; 
 	private ArrayList<Song> songLibrary; // holds in a Song
 	private ArrayList<Album> albumLibrary;
@@ -36,22 +36,47 @@ public class LibraryModel {
 	public void setPrintToConsole(boolean b) { this.printToConsole = b; }
 
 	public void addSong(String Stitle) {
-	    boolean songFound = false;
-	    for (SongData sD : musicStore.getSongData()) { // check all the songs in the library
-	        if (Stitle.equalsIgnoreCase(sD.getTitle())) {  // verify there is a SongData object that matches the title of the song
-	            Song S = sD.getSongObject(); // returns a copy of the SongObject
-	            if (musicStore.checkStoreSong(S.getTitle())) {
-	                if (!checkSongList(S)) { // add the song if it's not yet in the library
-	                    songLibrary.add(S);
-	                    System.out.println(Stitle + " has been Added!");
-	                    songFound = true;
-	                }
-	            }
-	        }
-	    }  
-	    if (songFound == false) {
-	        System.out.println("Song not found in the Music Store.");
-	    }
+		for (SongData sD : musicStore.getSongData()) {
+			if (Stitle.equalsIgnoreCase(sD.getTitle())) {
+				Song S = sD.getSongObject();
+				if (!checkSongList(S)) {
+					songLibrary.add(S);
+					
+					// find the album in the store
+					Album storeAlbum = null;
+					for (Album a : musicStore.getStore().values()) {
+						if (a.getName().equalsIgnoreCase(S.getAlbum())) {
+							storeAlbum = a;
+							break;
+						}
+					}
+					
+					if (storeAlbum != null) {
+						// check if we already have this album by name
+						Album libraryAlbum = null;
+						for (Album a : albumLibrary) {
+							if (a.getName().equalsIgnoreCase(storeAlbum.getName())) {
+								libraryAlbum = a;
+								break;
+							}
+						}
+						
+						if (libraryAlbum == null) {
+							// create new album if it doesn't exist
+							libraryAlbum = new Album(storeAlbum);
+							libraryAlbum.getSongs().clear();
+							albumLibrary.add(libraryAlbum);
+						}
+						libraryAlbum.addSong(S);
+					}
+					
+					System.out.println(Stitle + " has been Added!");
+					updateAutomaticPlaylists();
+					return;
+				}
+			}
+		}
+		System.out.println("Song not found in the Music Store.");
 	}
 
 	// basically, mirror the addSong() method but for Album
@@ -67,6 +92,7 @@ public class LibraryModel {
 							}
 						}
 						System.out.println("\n" + aTitle + " has been Added :)");
+						updateAutomaticPlaylists();
 						break;
 					}
 					else System.out.println("Album already in the library");
@@ -114,14 +140,23 @@ public class LibraryModel {
 	 * @pre: sTitle != null
 	 */
 	public void rateSong(String sTitle, int r) {
-		boolean found = false; // mirror the strategy of addSong
-		for(SongData d : getDataInLibrary()) { // check in all of the SongData objects in the array
+		boolean found = false;
+		for(SongData d : getDataInLibrary()) {
 			if(d.getTitle().equalsIgnoreCase(sTitle)) {
 				d.rate(r);
-				if(d.favoriteStatus()) {
-					addFavorite(d.getTitle());
+				// Add to favorites if rating is 5
+				if(r == 5) {
+					if (!favorites.contains(d)) {
+						favorites.add(d);
+					}
+				} else {
+					// Remove from favorites if rating drops below 5 (unless manually favorited)
+					if (d.getRating().ordinal() < 5) {
+						favorites.remove(d);
+					}
 				}
 				found = true;
+				updateAutomaticPlaylists();
 				break;
 			}
 		}
@@ -263,13 +298,13 @@ public class LibraryModel {
 	
 	//Search Methods
 	/*
-	 * Search for Song by Title
+	 * search for song by title
 	 * @pre: a_t != null
 	 * @return true if song was found, false otherwise
 	 */
 	public boolean searchSongbyString(String songName){
 		ArrayList<Song> songsByString = new ArrayList<>();
-		for(Song s1: songLibrary) {	// Makes sure to retrieve the song that does match the artist
+		for(Song s1: songLibrary) {	// make sure to retrieve the song that does match the artist
 			if(songName.equalsIgnoreCase(s1.getTitle())) { 
 				songsByString.add(s1); 
 			}
@@ -315,11 +350,21 @@ public class LibraryModel {
 
 			}
 		}
-		
 	}
+	/* @pre: genre != null */
+	public void searchSongByGenre(String genre) {
+		for(Album a : albumLibrary) {
+			if(a.getGenre().equalsIgnoreCase(genre)) {
+				for(Song s : a.getSongs()) { 
+					System.out.println(s + " by " + a.getArtist() +", " + s.getAlbum());
+				}
+			}
+		}
+		System.out.println("\nNo " + genre + " songs in the library");
+	} 
 
 	/*
-	 * Search for an Album by Title or Artist
+	 * Search for an Album by Title
 	 * @pre: a_t != null
 	 */
 	public void searchAlbumbyString(String a_t){
@@ -358,8 +403,9 @@ public class LibraryModel {
 	}
 	/*
 	 * @pre: title != null && author != null
+	 * @return true if any songs were found, false otherwise
 	 */
-	public void searchSongByTitleArtist(String author) {
+	public boolean searchSongByTitleArtist(String author) {
 		ArrayList<Song> songsByString = new ArrayList<>();
 		for(Song s: songLibrary) {	// Makes sure to retrieve the song that does match the artist and title
 			if(author.equalsIgnoreCase(s.getAuthor())) { 
@@ -369,10 +415,12 @@ public class LibraryModel {
 		}
 		if(songsByString.isEmpty()) {
 			System.out.println("Item is not in your library");
+			return false;
 		}
 		for(Song p: songsByString) { // Prints the songs retrieved from the resulted iteration
 			System.out.println(p);
 		}
+		return true;
 	}
 	
 	//Search for a PlayList
@@ -495,11 +543,15 @@ public class LibraryModel {
 		// create automatic playlists if they don't exist
 		boolean hasRecentPlaylist = false;
 		boolean hasMostPlayedPlaylist = false;
+		boolean hasFavoritePlaylist = false;
 		for (PlayList p : userList) {
-			if (p.getTitle().equals("Recently Played")) {
+			String title = p.getTitle();
+			if (title.equals("Recently Played")) {
 				hasRecentPlaylist = true;
-			} else if (p.getTitle().equals("Most Played")) {
+			} else if (title.equals("Most Played")) {
 				hasMostPlayedPlaylist = true;
+			} else if (title.equals("Favorite Songs")) {
+				hasFavoritePlaylist = true;
 			}
 		}
 		if (!hasRecentPlaylist) {
@@ -507,6 +559,9 @@ public class LibraryModel {
 		}
 		if (!hasMostPlayedPlaylist) {
 			userList.add(new PlayList("Most Played"));
+		}
+		if (!hasFavoritePlaylist) {
+			userList.add(new PlayList("Favorite Songs"));
 		}
 
 		// update play count
@@ -534,40 +589,113 @@ public class LibraryModel {
 		}
 		return true;
 	}
+	/* This method gets the count of songs by genre */
+	private HashMap<String, Integer> countSongsByGenre() {
+		HashMap<String, Integer> genreCounts = new HashMap<>();
+		for (Album album : albumLibrary) {
+			String genre = album.getGenre().toUpperCase();
+			int currentCount = genreCounts.getOrDefault(genre, 0);
+			currentCount += album.getSongs().size();
+			genreCounts.put(genre, currentCount);
+		}
+		return genreCounts;
+	}
 
-	/*
-	 * updates both the Recently Played and Most Played automatic playlists
-	 */
 	private void updateAutomaticPlaylists() {
 		// update Recently Played playlist
 		PlayList recentPlaylist = null;
 		PlayList mostPlayedPlaylist = null;
+		PlayList favoritePlaylist = null;
+		int recentIndex = -1; // the -1 is used as "the song's index" hasn't been found yet
+		int mostPlayedIndex = -1;
+		int favoriteIndex = -1;
 
 		// find the automatic playlists in userList
-		for (PlayList p : userList) {
-			if (p.getTitle().equals("Recently Played")) {
+		for (int i = 0; i < userList.size(); i++) {
+			PlayList p = userList.get(i);
+			String title = p.getTitle();
+			if (title.equals("Recently Played")) {
 				recentPlaylist = p;
-			} else if (p.getTitle().equals("Most Played")) {
+				recentIndex = i;
+			} else if (title.equals("Most Played")) {
 				mostPlayedPlaylist = p;
+				mostPlayedIndex = i;
+			} else if (title.equals("Favorite Songs")) {
+				favoritePlaylist = p;
+				favoriteIndex = i;
 			}
 		}
 
-		// clear and rebuild "recently played" playlist to account for any immediate changes
+		// update Recently Played playlist
 		if (recentPlaylist != null) {
 			recentPlaylist = new PlayList("Recently Played");
-			// add songs in order (most recent first)
 			for (Song song : recentlyPlayed) {
 				recentPlaylist.addSong(song);
 			}
+			userList.set(recentIndex, recentPlaylist);
 		}
 
-		// same for "most played" playlist
+		// update Most Played playlist
 		if (mostPlayedPlaylist != null) {
 			mostPlayedPlaylist = new PlayList("Most Played");
 			ArrayList<Song> mostPlayed = getMostPlayedSongs();
-			// add songs in order (highest play count first)
 			for (Song song : mostPlayed) {
 				mostPlayedPlaylist.addSong(song);
+			}
+			userList.set(mostPlayedIndex, mostPlayedPlaylist);
+		}
+
+		// update favorites playlist with songs that are marked as favorite or rated 5
+		PlayList newFavoritePlaylist = new PlayList("Favorite Songs");
+		PlayList newTopRatedPlaylist = new PlayList("Top Rated");
+		for (SongData data : getDataInLibrary()) {
+			// Add to favorites if marked as favorite or rated 5
+			if (favorites.contains(data) || data.getRating().ordinal() == 5) {
+				newFavoritePlaylist.addSong(data.getSongObject());
+			}
+			// Add to top rated if rated 4 or 5
+			if (data.getRating().ordinal() >= 4) {
+				newTopRatedPlaylist.addSong(data.getSongObject());
+			}
+		}
+		if (favoriteIndex != -1) {
+			userList.set(favoriteIndex, newFavoritePlaylist);
+		} else {
+			userList.add(newFavoritePlaylist);
+		}
+
+		// Find or create Top Rated playlist
+		int topRatedIndex = -1;
+		for (int i = 0; i < userList.size(); i++) {
+			if (userList.get(i).getTitle().equals("Top Rated")) {
+				topRatedIndex = i;
+				break;
+			}
+		}
+		if (topRatedIndex != -1) {
+			userList.set(topRatedIndex, newTopRatedPlaylist);
+		} else {
+			userList.add(newTopRatedPlaylist);
+		}
+
+		// Update genre-based playlists
+		HashMap<String, Integer> genreCounts = countSongsByGenre();
+		
+		// Remove existing genre playlists
+		userList.removeIf(p -> p.getTitle().startsWith("Genre: "));
+		
+		// Create new genre playlists for genres with 10+ songs
+		for (String genre : genreCounts.keySet()) {
+			if (genreCounts.get(genre) >= 10) {
+				PlayList genrePlaylist = new PlayList("Genre: " + genre);
+				for (Album album : albumLibrary) {
+					if (album.getGenre().toUpperCase().equals(genre)) {
+						for (Song song : album.getSongs()) {
+							genrePlaylist.addSong(song);
+						}
+					}
+				}
+				userList.add(genrePlaylist);
 			}
 		}
 	}
@@ -660,7 +788,7 @@ public class LibraryModel {
 	}
 
 	// comparator methods for sorting songs
-	private Comparator<Song> titleComparator() {
+	public Comparator<Song> titleComparator() {
 		return new Comparator<Song>() {
 			public int compare(Song song1, Song song2) {
 				return song1.getTitle().compareToIgnoreCase(song2.getTitle());
@@ -668,7 +796,7 @@ public class LibraryModel {
 		};
 	}
 	
-	private Comparator<Song> artistComparator() {
+	public Comparator<Song> artistComparator() {
 		return new Comparator<Song>() {
 			public int compare(Song song1, Song song2) {
 				return song1.getAuthor().compareToIgnoreCase(song2.getAuthor());
@@ -676,7 +804,7 @@ public class LibraryModel {
 		};
 	}
 	
-	private Comparator<Song> ratingComparator() {
+	public Comparator<Song> ratingComparator() {
 		return new Comparator<Song>() {
 			public int compare(Song song1, Song song2) {
 				// get SongData objects to access ratings
@@ -832,6 +960,7 @@ public class LibraryModel {
 	}
 
 	public void shufflePlayList(String pName) {
+		// doesn't make sense to shuffle these playlists
 		if (pName.equalsIgnoreCase("Recently Played") ||
 			pName.equalsIgnoreCase("Most Played")) {
 			return;
@@ -851,4 +980,24 @@ public class LibraryModel {
 			}
 		}
 	}
+
+	// methods to get the new automatic playlists
+	public PlayList getTopRated() {
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Top Rated")) {
+				return p;
+			}
+		}
+		return new PlayList("Top Rated");
+	}
+
+	public PlayList getGenrePlaylist(String genre) {
+		for (PlayList p : userList) {
+			if (p.getTitle().equals("Genre: " + genre)) {
+				return p;
+			}
+		}
+		return null;
+	}
+
 }

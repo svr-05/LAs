@@ -11,9 +11,9 @@ import java.util.Scanner;
 /*
  * The view has been AI generated, we used a drafted code as "sample" so we could give AI an idea
  * on how to shape the view. From there, we manually added features and reprompted the AI to add
- * functionallity.
+ * functionality.
  */
-public class View {
+public final class View {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         MusicStore musicStore = new MusicStore();
@@ -170,6 +170,8 @@ public class View {
             System.out.println("19 - Remove Album from Library");
             System.out.println("20 - Shuffle All Songs");
             System.out.println("21 - Shuffle Playlist");
+            System.out.println("22 - Search Songs by Genre");
+            System.out.println("23 - View Automatic Playlists");
             System.out.println("B  - Back");
             System.out.print("Select an option: ");
             choice = scanner.nextLine().toLowerCase();
@@ -355,6 +357,146 @@ public class View {
                     String playlistName = scanner.nextLine();
                     libraryModel.shufflePlayList(playlistName);
                     System.out.println("Playlist has been shuffled!");
+                }
+                case "22" -> {
+                    System.out.print("Enter genre to search for: ");
+                    String genre = scanner.nextLine();
+                    libraryModel.searchSongByGenre(genre);
+                }
+                case "23" -> {
+                    System.out.println("\nAutomatic Playlists:");
+                    System.out.println("1. Recently Played");
+                    System.out.println("2. Most Played");
+                    System.out.println("3. Favorite Songs");
+                    System.out.println("4. Genre Playlists");
+                    System.out.println("5. Top Rated");
+                    System.out.print("Select a playlist type (1-5): ");
+                    String playlistChoice = scanner.nextLine();
+                    
+                    switch (playlistChoice) {
+                        case "1" -> {
+                            System.out.println("\nRecently Played Songs:");
+                            PlayList recentSongs = libraryModel.getRecentlyPlayed();
+                            ArrayList<Song> recentSongsList = recentSongs.getBody();
+                            if (recentSongsList.isEmpty()) {
+                                System.out.println("No songs have been played yet.");
+                            } else {
+                                for (int i = 0; i < recentSongsList.size(); i++) {
+                                    System.out.printf("%d. %s%n", i + 1, recentSongsList.get(i).toString());
+                                }
+                            }
+                        }
+                        case "2" -> {
+                            System.out.println("\nMost Played Songs:");
+                            PlayList mostPlayedList = libraryModel.getMostPlayed();
+                            ArrayList<Song> mostPlayed = mostPlayedList.getBody();
+                            if (mostPlayed.isEmpty()) {
+                                System.out.println("No songs have been played yet.");
+                            } else {
+                                for (int i = 0; i < mostPlayed.size(); i++) {
+                                    System.out.printf("%d. %s%n", i + 1, mostPlayed.get(i).toString());
+                                }
+                            }
+                        }
+                        case "3" -> {
+                            System.out.println("\nFavorite Songs:");
+                            System.out.println("Sort By:");
+                            System.out.println("a - Title");
+                            System.out.println("b - Artist");
+                            System.out.println("c - Rating");
+                            System.out.print("Select sorting option: ");
+                            String sortChoice = scanner.nextLine();
+                            
+                            ArrayList<Song> sortedSongs = new ArrayList<>();
+                            for (PlayList p : libraryModel.getUserList()) {
+                                if (p.getTitle().equals("Favorite Songs")) {
+                                    ArrayList<Song> favorites = p.getBody();
+                                    if (favorites.isEmpty()) {
+                                        System.out.println("No favorite songs yet.");
+                                        break;
+                                    }
+                                    sortedSongs.addAll(favorites);
+                                    switch (sortChoice) {
+                                        case "a" -> sortedSongs.sort(libraryModel.titleComparator());
+                                        case "b" -> sortedSongs.sort(libraryModel.artistComparator());
+                                        case "c" -> sortedSongs.sort(libraryModel.ratingComparator());
+                                        default -> {
+                                            System.out.println("Invalid sorting option.");
+                                            break;
+                                        }
+                                    }
+                                    for (int i = 0; i < sortedSongs.size(); i++) {
+                                        System.out.printf("%d. %s%n", i + 1, sortedSongs.get(i).toString());
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        case "4" -> {
+                            System.out.println("\nGenre Playlists (10+ songs):");
+                            System.out.println("Sort By:");
+                            System.out.println("a - Title");
+                            System.out.println("b - Artist");
+                            System.out.println("c - Rating");
+                            System.out.print("Select sorting option: ");
+                            String sortChoice = scanner.nextLine();
+                            
+                            boolean foundGenrePlaylist = false;
+                            for (PlayList p : libraryModel.getUserList()) {
+                                if (p.getTitle().startsWith("Genre: ")) {
+                                    foundGenrePlaylist = true;
+                                    System.out.println("\n" + p.getTitle() + ":");
+                                    ArrayList<Song> songs = p.getBody();
+                                    if (!songs.isEmpty()) {
+                                        switch (sortChoice) {
+                                            case "a" -> songs.sort(libraryModel.titleComparator());
+                                            case "b" -> songs.sort(libraryModel.artistComparator());
+                                            case "c" -> songs.sort(libraryModel.ratingComparator());
+                                            default -> {
+                                                System.out.println("Invalid sorting option.");
+                                                continue;
+                                            }
+                                        }
+                                        for (int i = 0; i < songs.size(); i++) {
+                                            System.out.printf("%d. %s%n", i + 1, songs.get(i).toString());
+                                        }
+                                    }
+                                }
+                            }
+                            if (!foundGenrePlaylist) {
+                                System.out.println("No genres have 10 or more songs yet.");
+                            }
+                        }
+                        case "5" -> {
+                            System.out.println("\nTop Rated Songs (4-5 stars):");
+                            System.out.println("Sort By:");
+                            System.out.println("a - Title");
+                            System.out.println("b - Artist");
+                            System.out.println("c - Rating");
+                            System.out.print("Select sorting option: ");
+                            String sortChoice = scanner.nextLine();
+                            
+                            PlayList topRatedList = libraryModel.getTopRated();
+                            ArrayList<Song> topRated = topRatedList.getBody();
+                            if (topRated.isEmpty()) {
+                                System.out.println("No songs rated 4 or 5 stars yet.");
+                            } else {
+                                switch (sortChoice) {
+                                    case "a" -> topRated.sort(libraryModel.titleComparator());
+                                    case "b" -> topRated.sort(libraryModel.artistComparator());
+                                    case "c" -> topRated.sort(libraryModel.ratingComparator());
+                                    default -> {
+                                        System.out.println("Invalid sorting option.");
+                                        break;
+                                    }
+                                }
+                                for (int i = 0; i < topRated.size(); i++) {
+                                    System.out.printf("%d. %s%n", i + 1, topRated.get(i).toString());
+                                }
+                            }
+                        }
+                        default -> System.out.println("Invalid choice.");
+                    }
                 }
                 case "b" -> System.out.println("Returning to main menu...\n");
                 default -> System.out.println("Invalid input. Please try again.\n");

@@ -11,7 +11,7 @@ import database.model.SongData;
 
 import java.util.ArrayList;
 
-public class MusicStore {
+public final class MusicStore {
 	
 	private HashMap<String, Album> store;
 	private ArrayList<SongData> storeSongs;
